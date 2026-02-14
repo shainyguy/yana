@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Для тебя моя дорогая Яночка ❤️</title>
+    <title>Для тебя моя Яночка ❤️</title>
     <style>
-        /* ============================================
-           СВЕТЛАЯ РОЗОВАЯ ТЕМА
-           ============================================ */
         :root {
             --bg-primary: #fff0f3;
             --bg-secondary: #ffe4ec;
@@ -16,7 +13,6 @@
             --accent-light: #ff6b8a;
             --accent-glow: rgba(232, 69, 107, 0.3);
             --accent-soft: rgba(232, 69, 107, 0.1);
-            --accent-bg: rgba(232, 69, 107, 0.06);
             --text-primary: #4a2030;
             --text-secondary: rgba(74, 32, 48, 0.6);
             --glass-bg: rgba(255, 255, 255, 0.55);
@@ -53,7 +49,6 @@
             user-select: none;
         }
 
-        /* Фоновые декоративные круги */
         body::before,
         body::after {
             content: '';
@@ -337,9 +332,7 @@
             margin-top: 20px;
         }
 
-        .timeline-item {
-            display: flex; gap: 14px; align-items: flex-start;
-        }
+        .timeline-item { display: flex; gap: 14px; align-items: flex-start; }
 
         .timeline-dot {
             width: 12px; height: 12px;
@@ -351,7 +344,6 @@
 
         .timeline-content h3 {
             font-size: 15px; font-weight: 600; margin-bottom: 4px;
-            color: var(--text-primary);
         }
 
         .timeline-content p {
@@ -403,7 +395,6 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             box-shadow: var(--shadow-soft);
-            color: var(--text-primary);
         }
 
         /* ============ RIDDLE ============ */
@@ -539,7 +530,7 @@
 
         .puzzle-complete .complete-text {
             font-size: 16px; line-height: 1.7;
-            color: var(--text-primary); margin-bottom: 16px;
+            margin-bottom: 16px;
         }
 
         /* ============ OVERLAYS ============ */
@@ -652,7 +643,7 @@
             font-size: 13px;
             color: var(--text-secondary);
             text-align: center;
-            max-width: 280px;
+            max-width: 300px;
             opacity: 0;
             transition: opacity 1s ease;
             pointer-events: none;
@@ -665,6 +656,46 @@
         }
 
         .hint-bar.visible { opacity: 1; }
+
+        /* ============ HEART HINT ANIMATION ============ */
+        .heart-hint-icon {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 49;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+            font-size: 60px;
+            animation: heartHintDraw 3s ease-in-out infinite;
+        }
+
+        .heart-hint-icon.visible { opacity: 0.3; }
+
+        @keyframes heartHintDraw {
+            0%, 100% { transform: translateX(-50%) scale(0.9); opacity: 0.2; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 0.4; }
+        }
+
+        /* ============ FINGER HINT for hold ============ */
+        .hold-finger-hint {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            animation: fingerPulse 2s ease-in-out infinite;
+        }
+
+        .hold-finger-hint.visible { opacity: 0.6; }
+
+        @keyframes fingerPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
+        }
 
         /* ============ FINAL BADGE ============ */
         #finalBadge {
@@ -720,7 +751,6 @@
             border-radius: 50%;
             background: rgba(232, 69, 107, 0.2);
             transition: background 0.3s ease, transform 0.3s ease;
-            cursor: pointer;
         }
 
         .nav-dot.active {
@@ -763,7 +793,6 @@
         /* ============ CONFETTI ============ */
         .confetti-piece {
             position: fixed;
-            width: 8px; height: 8px;
             z-index: 200;
             pointer-events: none;
             border-radius: 2px;
@@ -811,15 +840,9 @@
             pointer-events: none;
         }
 
-        .prompt-card {
-            text-align: center;
-            max-width: 300px;
-            padding: 20px;
-        }
+        .prompt-card { text-align: center; max-width: 300px; padding: 20px; }
 
-        .prompt-card .prompt-emoji {
-            font-size: 56px; margin-bottom: 16px;
-        }
+        .prompt-card .prompt-emoji { font-size: 56px; margin-bottom: 16px; }
 
         .prompt-card .prompt-title {
             font-size: 22px; font-weight: 700;
@@ -840,7 +863,7 @@
 </head>
 <body>
 
-<!-- ============ MUSIC PROMPT (нужен клик для autoplay) ============ -->
+<!-- ============ MUSIC PROMPT ============ -->
 <div id="musicPrompt">
     <div class="prompt-card">
         <div class="prompt-emoji">🎵</div>
@@ -853,7 +876,7 @@
     </div>
 </div>
 
-<!-- ============ MUSIC TOGGLE ============ -->
+<!-- MUSIC TOGGLE -->
 <button id="musicToggle" onclick="toggleMusic()" style="display:none;">
     <div class="music-bars">
         <span></span><span></span><span></span><span></span>
@@ -870,15 +893,15 @@
     <span class="progress-star" id="star4" title="Секрет терпения">⭐</span>
 </div>
 
-<!-- NAV DOTS -->
+<!-- NAV DOTS (только индикация, без клика) -->
 <div class="nav-dots" id="navDots"></div>
 
 <!-- ============ SCREEN 1 — WELCOME ============ -->
 <div class="screen active" id="screen1">
     <div class="reveal-item">
         <div class="photo-container">
-            <!-- ЗАМЕНИТЬ: <img src="photo.jpg" alt="" loading="lazy"> -->
-            <img src="https://clck.ru/3RoZbK" alt="Мы в лесу" width="250" loading="lazy">
+            <!-- ЗАМЕНИТЬ: <img src="main.jpg" alt="Мы" loading="lazy"> -->
+            <img src="main.jpg" alt="Мы" loading="lazy">
         </div>
     </div>
     <h1 class="title reveal-item" id="welcomeTitle"></h1>
@@ -895,22 +918,22 @@
         <div class="timeline-item reveal-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-                <h3>Первая встреча ✨</h3>
+                <h3>18.12.2024 ✨</h3>
                 <p>Тот самый момент, когда всё началось…</p>
             </div>
         </div>
         <div class="timeline-item reveal-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-                <h3>Первый смех вместе 😄</h3>
+                <h3>01.01.2025</h3>
                 <p>Когда я понял, что ты — особенная.</p>
             </div>
         </div>
         <div class="timeline-item reveal-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-                <h3>Первое «скучаю» 💭</h3>
-                <p>Расстояние только подтвердило чувства.</p>
+                <h3>27.12.2024</h3>
+                <p>Первое "скучаю"</p>
             </div>
         </div>
         <div class="timeline-item reveal-item">
@@ -930,10 +953,10 @@
     <p class="subtitle reveal-item">Каждый из них — бесценен</p>
     <div class="gallery-grid">
         <!-- ЗАМЕНИТЬ: ваши фото -->
-        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌅</div></div>
-        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌙</div></div>
-        <div class="gallery-item reveal-item"><div class="gallery-placeholder">☀️</div></div>
-        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌸</div></div>
+        <div class="gallery-item reveal-item"><img src="photo1.jpg" alt="Мы" loading="lazy"></div>
+        <div class="gallery-item reveal-item"><img src="photo2.jpg" alt="Мы" loading="lazy"></div>
+        <div class="gallery-item reveal-item"><img src="photo3.jpg" alt="Мы" loading="lazy"></div>
+        <div class="gallery-item reveal-item"><img src="photo4.jpg" alt="Мы" loading="lazy"></div>
     </div>
     <button class="btn btn-glass reveal-item" style="margin-top:28px;" onclick="goToScreen(4)">Дальше →</button>
 </div>
@@ -997,14 +1020,17 @@
     <div class="glass-card reveal-item">
         <p style="font-size:15px; line-height:1.8;" id="finalMessage"></p>
     </div>
+    <!-- SECRET #2: HOLD -->
     <div class="hold-area reveal-item" id="holdArea">
         <div class="hold-glow"></div>
         <div class="hold-ring">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" id="holdCircle"/></svg>
         </div>
         <span class="hold-icon">✨</span>
+        <!-- Подсказка: палец на смайлик -->
+        <div class="hold-finger-hint" id="holdFingerHint">☝️</div>
     </div>
-    <p class="reveal-item" style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+    <p class="reveal-item" style="font-size:12px; color:var(--text-secondary); margin-top:2px;" id="holdLabel">
         Здесь скрыто кое-что особенное
     </p>
 </div>
@@ -1033,39 +1059,41 @@
 <div class="hint-bar" id="gestureHint">Иногда достаточно нарисовать то, что чувствуешь… ❤️</div>
 <div class="hint-bar" id="holdHint" style="bottom: 90px;"></div>
 
+<!-- Визуальная подсказка сердца -->
+<div class="heart-hint-icon" id="heartHintIcon">💕</div>
+
 <!-- FINAL BADGE -->
 <div id="finalBadge"></div>
 
 <!-- ============ AUDIO ============ -->
 <!--
-    ИНСТРУКЦИЯ:
-    1. Скачай фоновую музыку и сохрани как music.mp3 рядом с index.html
-    2. Скачай звук сердцебиения и сохрани как heartbeat.mp3 рядом с index.html
+    Положи рядом с index.html:
+    1. music.mp3     — фоновая песня
+    2. heartbeat.mp3 — звук сердцебиения
 -->
 <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
 </audio>
-
 <audio id="heartbeatAudio" preload="auto">
     <source src="heartbeat.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 // ============================================
-// ПЕРСОНАЛИЗАЦИЯ — ИЗМЕНИ ИМЕНА ЗДЕСЬ
+// ПЕРСОНАЛИЗАЦИЯ
 // ============================================
 const girlName = "Яна";
 const boyName = "Кирилл";
 
 // ============================================
-// AUDIO SYSTEM
+// AUDIO
 // ============================================
 const bgMusic = document.getElementById('bgMusic');
 const heartbeatAudio = document.getElementById('heartbeatAudio');
 let musicEnabled = false;
 
-bgMusic.volume = 0.4;         // Громкость фоновой музыки (0-1)
-heartbeatAudio.volume = 0.6;  // Громкость сердцебиения (0-1)
+bgMusic.volume = 0.4;
+heartbeatAudio.volume = 0.6;
 
 function startWithMusic() {
     musicEnabled = true;
@@ -1099,60 +1127,50 @@ function toggleMusic() {
     }
 }
 
-// Воспроизвести звук сердцебиения + визуальная вспышка
 function playHeartbeat() {
     heartbeatAudio.currentTime = 0;
     heartbeatAudio.play().catch(() => {});
-
-    // Визуальная пульсация экрана
     const flash = document.createElement('div');
     flash.className = 'heartbeat-flash';
     document.body.appendChild(flash);
     setTimeout(() => flash.remove(), 600);
-
     if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
 }
 
-// Притушить музыку в важный момент, потом вернуть
-function duckMusic(durationMs = 3000) {
+function duckMusic(ms = 3000) {
     if (!musicEnabled || bgMusic.paused) return;
-    const origVol = bgMusic.volume;
-    bgMusic.volume = origVol * 0.2;
+    const orig = bgMusic.volume;
+    bgMusic.volume = orig * 0.2;
     setTimeout(() => {
-        // Плавное восстановление
         let vol = bgMusic.volume;
-        const step = (origVol - vol) / 20;
-        const interval = setInterval(() => {
+        const step = (orig - vol) / 20;
+        const iv = setInterval(() => {
             vol += step;
-            if (vol >= origVol) {
-                bgMusic.volume = origVol;
-                clearInterval(interval);
-            } else {
-                bgMusic.volume = vol;
-            }
+            if (vol >= orig) { bgMusic.volume = orig; clearInterval(iv); }
+            else bgMusic.volume = vol;
         }, 50);
-    }, durationMs);
+    }, ms);
 }
 
 // ============================================
-// DYNAMIC TEXTS
+// TEXTS
 // ============================================
 document.getElementById('promptTitle').textContent = `Это для тебя, ${girlName}`;
 document.getElementById('welcomeTitle').textContent = `Для тебя, ${girlName}`;
-document.getElementById('welcomeSubtitle').textContent = `${boyName} приготовил кое-что особенное…`;
-document.getElementById('storySubtitle').textContent = `${girlName}, помнишь?`;
-document.getElementById('timelineNow').textContent = `Каждый день с тобой — подарок, ${girlName}.`;
-document.getElementById('riddleIntro').textContent = `${girlName}, проверим, насколько мы близки?`;
-document.getElementById('gameIntro').textContent = `Маленькая игра от ${boyName}а`;
-document.getElementById('traitsTitle').textContent = `Почему ты, ${girlName}?`;
+document.getElementById('welcomeSubtitle').textContent = `Я приготовил кое-что особенное…`;
+document.getElementById('storySubtitle').textContent = `Януль, помнишь?`;
+document.getElementById('timelineNow').textContent = `Каждый день с тобой — подарок, моя жизнь.`;
+document.getElementById('riddleIntro').textContent = `Яночка, проверим, насколько мы близки?`;
+document.getElementById('gameIntro').textContent = `Маленькая игра от меня`;
+document.getElementById('traitsTitle').textContent = `Почему ты, малыш`;
 document.getElementById('finalTitle').textContent = `${girlName}…`;
-document.getElementById('finalSubtitle').textContent = `У ${boyName}а есть слова для тебя`;
+document.getElementById('finalSubtitle').textContent = `У меня есть слова для тебя`;
 document.getElementById('finalMessage').innerHTML =
     `${girlName}, ты — лучшее, что случилось в моей жизни. ` +
     `Каждый день рядом с тобой наполнен смыслом и теплом. ` +
     `Спасибо, что ты есть. ❤️<br><br>— ${boyName}`;
 document.getElementById('secret1Text').innerHTML =
-    `Ты нашла секрет, ${girlName} ❤️<br>${boyName} приготовил для тебя сюрприз…`;
+    `Ты нашла секрет, ${girlName} ❤️<br>я приготовил для тебя сюрприз… ждет дома.`;
 document.getElementById('holdSignature').textContent = `— ${boyName}`;
 document.getElementById('finalBadge').innerHTML =
     `Ты нашла всё.<br>И это только начало, ${girlName} ❤️`;
@@ -1169,17 +1187,19 @@ let gameSolved = false;
 let idleTimer = null;
 let wrongGestureCount = 0;
 let holdHintTimer = null;
+let holdFingerTimer = null;
 let particleBoostUntil = 0;
+let heartHintShown = false;
 
 // ============================================
-// NAV DOTS
+// NAV DOTS (только индикация, без клика)
 // ============================================
 const navDotsContainer = document.getElementById('navDots');
 for (let i = 1; i <= totalScreens; i++) {
     const dot = document.createElement('div');
     dot.className = 'nav-dot' + (i === 1 ? ' active' : '');
     dot.dataset.screen = i;
-    dot.addEventListener('click', () => goToScreen(i));
+    // Без addEventListener — навигация только кнопками
     navDotsContainer.appendChild(dot);
 }
 
@@ -1205,7 +1225,7 @@ function updateProgressVisibility() {
 }
 
 // ============================================
-// SCREEN TRANSITIONS
+// SCREEN TRANSITIONS (только через кнопки)
 // ============================================
 function goToScreen(num) {
     if (num === currentScreen || num < 1 || num > totalScreens) return;
@@ -1225,13 +1245,20 @@ function goToScreen(num) {
         triggerRevealItems(nextEl);
         resetIdleTimer();
 
-        // Сердцебиение на важных экранах
+        // Убрать подсказку сердца при переходе
+        hideHeartHint();
+
         if (num === 4 || num === 7) {
             setTimeout(() => playHeartbeat(), 500);
         }
 
         if (num === 5 && !gameSolved) initPuzzleGame();
-        if (num === 7 && !secret2Found) startHoldHintTimer();
+
+        // Экран 7 — запустить подсказки для удержания
+        if (num === 7 && !secret2Found) {
+            startHoldHintTimer();
+            startHoldFingerTimer();
+        }
     }, 100);
 }
 
@@ -1275,7 +1302,7 @@ document.querySelectorAll('.btn').forEach(btn => {
 });
 
 // ============================================
-// PARTICLE SYSTEM (розовые частицы)
+// PARTICLES
 // ============================================
 const canvas = document.getElementById('particleCanvas');
 const ctx = canvas.getContext('2d');
@@ -1290,7 +1317,6 @@ window.addEventListener('resize', resizeCanvas);
 
 class Particle {
     constructor(boosted = false) { this.reset(boosted); }
-
     reset(boosted = false) {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
@@ -1300,43 +1326,36 @@ class Particle {
         this.opacity = Math.random() * 0.4 + (boosted ? 0.2 : 0.05);
         this.life = Math.random() * 250 + 120;
         this.maxLife = this.life;
-        // Розовые/персиковые тона
         const hues = [340, 345, 350, 355, 0, 10, 20];
         const hue = hues[Math.floor(Math.random() * hues.length)];
-        const sat = 70 + Math.random() * 30;
-        const light = 65 + Math.random() * 20;
-        this.color = `hsla(${hue}, ${sat}%, ${light}%, `;
+        this.color = `hsla(${hue}, ${70 + Math.random()*30}%, ${65 + Math.random()*20}%, `;
     }
-
     update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.life--;
+        this.x += this.speedX; this.y += this.speedY; this.life--;
         if (this.life <= 0 || this.x < -10 || this.x > canvas.width + 10 ||
             this.y < -10 || this.y > canvas.height + 10) {
             this.reset(performance.now() < particleBoostUntil);
         }
     }
-
     draw() {
-        const alpha = this.opacity * Math.min(this.life / this.maxLife, 1);
+        const a = this.opacity * Math.min(this.life / this.maxLife, 1);
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color + alpha + ')';
+        ctx.fillStyle = this.color + a + ')';
         ctx.fill();
     }
 }
 
-const PARTICLE_COUNT = Math.min(45, Math.floor(window.innerWidth * window.innerHeight / 20000));
-for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+const PC = Math.min(45, Math.floor(window.innerWidth * window.innerHeight / 20000));
+for (let i = 0; i < PC; i++) particles.push(new Particle());
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const isBoosted = performance.now() < particleBoostUntil;
-    if (isBoosted && particles.length < PARTICLE_COUNT * 3) {
+    const boosted = performance.now() < particleBoostUntil;
+    if (boosted && particles.length < PC * 3) {
         for (let i = 0; i < 3; i++) particles.push(new Particle(true));
     }
-    if (!isBoosted && particles.length > PARTICLE_COUNT) particles.splice(PARTICLE_COUNT);
+    if (!boosted && particles.length > PC) particles.splice(PC);
     particles.forEach(p => { p.update(); p.draw(); });
     requestAnimationFrame(animateParticles);
 }
@@ -1350,29 +1369,29 @@ function boostParticles(ms = 3000) { particleBoostUntil = performance.now() + ms
 function launchConfetti(count = 40) {
     const colors = ['#ff4d6d', '#ffd700', '#ff8fab', '#ffb3c6', '#fb6f92', '#ffc2d1'];
     for (let i = 0; i < count; i++) {
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-        piece.style.left = Math.random() * 100 + 'vw';
-        piece.style.top = '-10px';
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.width = (Math.random() * 8 + 4) + 'px';
-        piece.style.height = (Math.random() * 8 + 4) + 'px';
-        piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-        piece.style.animationDelay = (Math.random() * 0.8) + 's';
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 4000);
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.top = '-10px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.width = (Math.random() * 8 + 4) + 'px';
+        p.style.height = (Math.random() * 8 + 4) + 'px';
+        p.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+        p.style.animationDelay = (Math.random() * 0.8) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 4000);
     }
 }
 
 // ============================================
-// RIDDLE — ЗАГАДКА
+// RIDDLE
 // ============================================
-// ЗАМЕНИТЬ: вопрос и варианты на свои
+// ЗАМЕНИТЬ: вопрос и варианты
 const riddle = {
     question: `Что ${boyName} заметил первым при встрече с ${girlName}?`,
     options: [
         { text: "🌟 Улыбку", correct: false },
-        { text: "✨ Глаза", correct: true },    // ← правильный ответ
+        { text: "✨ Глаза", correct: true },
         { text: "🎵 Голос", correct: false },
         { text: "💫 Смех", correct: false }
     ],
@@ -1382,40 +1401,33 @@ const riddle = {
 
 function initRiddle() {
     document.getElementById('riddleText').textContent = riddle.question;
-    const container = document.getElementById('riddleOptions');
-    container.innerHTML = '';
-    const shuffled = [...riddle.options].sort(() => Math.random() - 0.5);
-    shuffled.forEach(opt => {
-        const btn = document.createElement('div');
-        btn.className = 'riddle-option';
-        btn.innerHTML = `<span>${opt.text}</span>`;
-        btn.addEventListener('click', () => handleRiddleAnswer(btn, opt.correct));
-        container.appendChild(btn);
+    const c = document.getElementById('riddleOptions');
+    c.innerHTML = '';
+    [...riddle.options].sort(() => Math.random() - 0.5).forEach(opt => {
+        const b = document.createElement('div');
+        b.className = 'riddle-option';
+        b.innerHTML = `<span>${opt.text}</span>`;
+        b.addEventListener('click', () => handleRiddleAnswer(b, opt.correct));
+        c.appendChild(b);
     });
 }
 
-function handleRiddleAnswer(el, isCorrect) {
+function handleRiddleAnswer(el, ok) {
     if (riddleSolved) return;
-    const allOptions = document.querySelectorAll('.riddle-option');
-    allOptions.forEach(o => o.style.pointerEvents = 'none');
+    const all = document.querySelectorAll('.riddle-option');
+    all.forEach(o => o.style.pointerEvents = 'none');
 
-    if (isCorrect) {
+    if (ok) {
         riddleSolved = true;
         el.classList.add('correct');
         if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
-        boostParticles(2000);
-        launchConfetti(25);
-        earnStar(1);
-        playHeartbeat();
-        duckMusic(2000);
-
+        boostParticles(2000); launchConfetti(25);
+        earnStar(1); playHeartbeat(); duckMusic(2000);
         document.getElementById('riddleEmoji').textContent = '🎉';
         document.getElementById('riddleResultText').textContent = riddle.correctMsg;
-
         setTimeout(() => {
-            const nextBtn = document.getElementById('riddleNextBtn');
-            nextBtn.style.opacity = '1';
-            nextBtn.style.pointerEvents = 'auto';
+            const nb = document.getElementById('riddleNextBtn');
+            nb.style.opacity = '1'; nb.style.pointerEvents = 'auto';
         }, 800);
     } else {
         el.classList.add('wrong');
@@ -1423,33 +1435,27 @@ function handleRiddleAnswer(el, isCorrect) {
         document.getElementById('riddleResultText').textContent = riddle.wrongMsg;
         setTimeout(() => {
             el.classList.remove('wrong');
-            allOptions.forEach(o => o.style.pointerEvents = 'auto');
+            all.forEach(o => o.style.pointerEvents = 'auto');
         }, 1200);
     }
-
-    const result = document.getElementById('riddleResult');
-    result.classList.add('visible');
-    if (!isCorrect) setTimeout(() => result.classList.remove('visible'), 2000);
+    const r = document.getElementById('riddleResult');
+    r.classList.add('visible');
+    if (!ok) setTimeout(() => r.classList.remove('visible'), 2000);
     checkAllSecrets();
 }
 
 initRiddle();
 
 // ============================================
-// MEMORY GAME — ИГРА
+// MEMORY GAME
 // ============================================
-// ЗАМЕНИТЬ: эмодзи на свои
+// ЗАМЕНИТЬ: эмодзи
 const puzzleEmojis = ['❤️', '💋', '🌹', '✨'];
-let puzzleCards = [];
-let flippedCards = [];
-let matchedPairs = 0;
-let moveCount = 0;
-let puzzleLocked = false;
+let puzzleCards = [], flippedCards = [], matchedPairs = 0, moveCount = 0, puzzleLocked = false;
 
 function initPuzzleGame() {
     if (gameSolved) return;
-    matchedPairs = 0; moveCount = 0;
-    flippedCards = []; puzzleLocked = false;
+    matchedPairs = 0; moveCount = 0; flippedCards = []; puzzleLocked = false;
     document.getElementById('moveCount').textContent = '0';
     document.getElementById('pairCount').textContent = '0';
     document.getElementById('puzzleComplete').classList.remove('visible');
@@ -1460,8 +1466,7 @@ function initPuzzleGame() {
 
     const grid = document.getElementById('puzzleGrid');
     grid.innerHTML = '';
-    let cardIndex = 0;
-
+    let ci = 0;
     for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
         cell.className = 'puzzle-cell';
@@ -1472,12 +1477,12 @@ function initPuzzleGame() {
             cell.style.cursor = 'default';
             cell.dataset.decorative = 'true';
         } else {
-            const card = puzzleCards[cardIndex];
+            const card = puzzleCards[ci];
             cell.dataset.emoji = card.emoji;
             cell.dataset.cardId = card.id;
             cell.innerHTML = `<span class="cell-back">?</span>`;
             cell.addEventListener('click', () => flipCard(cell));
-            cardIndex++;
+            ci++;
         }
         grid.appendChild(cell);
     }
@@ -1485,7 +1490,6 @@ function initPuzzleGame() {
 
 function flipCard(cell) {
     if (puzzleLocked || cell.classList.contains('flipped') || cell.classList.contains('matched') || cell.dataset.decorative) return;
-
     cell.classList.add('flipped');
     cell.innerHTML = cell.dataset.emoji;
     flippedCards.push(cell);
@@ -1496,27 +1500,22 @@ function flipCard(cell) {
         document.getElementById('moveCount').textContent = moveCount;
         puzzleLocked = true;
         const [a, b] = flippedCards;
-
         if (a.dataset.emoji === b.dataset.emoji) {
             setTimeout(() => {
-                a.classList.add('matched');
-                b.classList.add('matched');
+                a.classList.add('matched'); b.classList.add('matched');
                 matchedPairs++;
                 document.getElementById('pairCount').textContent = matchedPairs;
                 if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
                 playHeartbeat();
                 if (matchedPairs === puzzleEmojis.length) onPuzzleComplete();
-                flippedCards = [];
-                puzzleLocked = false;
+                flippedCards = []; puzzleLocked = false;
             }, 400);
         } else {
             setTimeout(() => {
-                a.classList.remove('flipped');
-                b.classList.remove('flipped');
+                a.classList.remove('flipped'); b.classList.remove('flipped');
                 a.innerHTML = `<span class="cell-back">?</span>`;
                 b.innerHTML = `<span class="cell-back">?</span>`;
-                flippedCards = [];
-                puzzleLocked = false;
+                flippedCards = []; puzzleLocked = false;
             }, 800);
         }
     }
@@ -1524,16 +1523,10 @@ function flipCard(cell) {
 
 function onPuzzleComplete() {
     gameSolved = true;
-    earnStar(2);
-    boostParticles(2500);
-    launchConfetti(35);
-    duckMusic(3000);
-
+    earnStar(2); boostParticles(2500); launchConfetti(35); duckMusic(3000);
     if (navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 100]);
-
     document.getElementById('puzzleCompleteText').innerHTML =
         `Отлично, ${girlName}! 🎉<br>Ты справилась за <strong>${moveCount}</strong> ходов!<br>${boyName} гордится тобой 💕`;
-
     setTimeout(() => document.getElementById('puzzleComplete').classList.add('visible'), 500);
     checkAllSecrets();
 }
@@ -1541,9 +1534,7 @@ function onPuzzleComplete() {
 // ============================================
 // SECRET #1 — HEART GESTURE
 // ============================================
-let drawPoints = [];
-let isDrawing = false;
-let trailElements = [];
+let drawPoints = [], isDrawing = false, trailElements = [];
 
 function isInteractive(el) {
     return el.closest('.btn, .hold-area, .overlay.visible, .nav-dot, .riddle-option, .puzzle-cell, .overlay-close, #musicToggle, #musicPrompt');
@@ -1551,8 +1542,7 @@ function isInteractive(el) {
 
 document.addEventListener('touchstart', (e) => {
     if (secret1Found || isInteractive(e.target)) return;
-    isDrawing = true;
-    drawPoints = [];
+    isDrawing = true; drawPoints = [];
     const t = e.touches[0];
     drawPoints.push({ x: t.clientX, y: t.clientY });
     addTrailDot(t.clientX, t.clientY);
@@ -1575,25 +1565,20 @@ document.addEventListener('touchend', () => {
         wrongGestureCount++;
         checkGestureHint();
     }
-    drawPoints = [];
-    clearTrails();
+    drawPoints = []; clearTrails();
 });
 
-// Mouse fallback
+// Mouse
 document.addEventListener('mousedown', (e) => {
     if (secret1Found || isInteractive(e.target)) return;
-    isDrawing = true;
-    drawPoints = [{ x: e.clientX, y: e.clientY }];
-    addTrailDot(e.clientX, e.clientY);
-    resetIdleTimer();
+    isDrawing = true; drawPoints = [{ x: e.clientX, y: e.clientY }];
+    addTrailDot(e.clientX, e.clientY); resetIdleTimer();
 });
-
 document.addEventListener('mousemove', (e) => {
     if (!isDrawing || secret1Found) return;
     drawPoints.push({ x: e.clientX, y: e.clientY });
     addTrailDot(e.clientX, e.clientY);
 });
-
 document.addEventListener('mouseup', () => {
     if (!isDrawing || secret1Found) return;
     isDrawing = false;
@@ -1603,61 +1588,55 @@ document.addEventListener('mouseup', () => {
         wrongGestureCount++;
         checkGestureHint();
     }
-    drawPoints = [];
-    clearTrails();
+    drawPoints = []; clearTrails();
 });
 
 function addTrailDot(x, y) {
     if (secret1Found) return;
-    const dot = document.createElement('div');
-    dot.className = 'draw-trail';
-    dot.style.left = x + 'px';
-    dot.style.top = y + 'px';
-    document.body.appendChild(dot);
-    trailElements.push(dot);
-    setTimeout(() => dot.remove(), 1000);
+    const d = document.createElement('div');
+    d.className = 'draw-trail';
+    d.style.left = x + 'px'; d.style.top = y + 'px';
+    document.body.appendChild(d);
+    trailElements.push(d);
+    setTimeout(() => d.remove(), 1000);
 }
 
 function clearTrails() {
-    setTimeout(() => {
-        trailElements.forEach(t => t.remove());
-        trailElements = [];
-    }, 1200);
+    setTimeout(() => { trailElements.forEach(t => t.remove()); trailElements = []; }, 1200);
 }
 
 // ============================================
 // HEART RECOGNITION
 // ============================================
-function recognizeHeart(points) {
-    if (points.length < 30) return false;
+function recognizeHeart(pts) {
+    if (pts.length < 30) return false;
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    points.forEach(p => {
+    pts.forEach(p => {
         minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
         minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
     });
     const w = maxX - minX, h = maxY - minY;
     if (w < 50 || h < 50) return false;
-    const aspect = w / h;
-    if (aspect < 0.5 || aspect > 1.8) return false;
+    if (w / h < 0.5 || w / h > 1.8) return false;
 
-    const norm = points.map(p => ({ x: (p.x - minX) / w, y: (p.y - minY) / h }));
+    const norm = pts.map(p => ({ x: (p.x - minX) / w, y: (p.y - minY) / h }));
 
-    let lowestY = -1, lowestPoint = null;
-    norm.forEach(p => { if (p.y > lowestY) { lowestY = p.y; lowestPoint = p; } });
-    if (!lowestPoint || lowestPoint.x < 0.2 || lowestPoint.x > 0.8 || lowestPoint.y < 0.65) return false;
+    let ly = -1, lp = null;
+    norm.forEach(p => { if (p.y > ly) { ly = p.y; lp = p; } });
+    if (!lp || lp.x < 0.2 || lp.x > 0.8 || lp.y < 0.65) return false;
 
-    const topPoints = norm.filter(p => p.y < 0.4);
-    if (topPoints.length < 4) return false;
-    if (topPoints.filter(p => p.x < 0.4).length < 2 || topPoints.filter(p => p.x > 0.6).length < 2) return false;
+    const top = norm.filter(p => p.y < 0.4);
+    if (top.length < 4) return false;
+    if (top.filter(p => p.x < 0.4).length < 2 || top.filter(p => p.x > 0.6).length < 2) return false;
 
-    let crossings = 0;
+    let cr = 0;
     for (let i = 1; i < norm.length; i++) {
-        if ((norm[i].x >= 0.5) !== (norm[i - 1].x >= 0.5)) crossings++;
+        if ((norm[i].x >= 0.5) !== (norm[i-1].x >= 0.5)) cr++;
     }
-    if (crossings < 2) return false;
+    if (cr < 2) return false;
 
-    const start = points[0], end = points[points.length - 1];
-    if (Math.hypot(start.x - end.x, start.y - end.y) > Math.max(w, h) * 0.5) return false;
+    const s = pts[0], e = pts[pts.length - 1];
+    if (Math.hypot(s.x - e.x, s.y - e.y) > Math.max(w, h) * 0.5) return false;
 
     return true;
 }
@@ -1665,38 +1644,59 @@ function recognizeHeart(points) {
 function triggerSecret1() {
     if (secret1Found) return;
     secret1Found = true;
-
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-
-    playHeartbeat();
-    duckMusic(4000);
-
+    playHeartbeat(); duckMusic(4000);
     document.getElementById('secretOverlay').classList.add('visible');
-    boostParticles(3000);
-    launchConfetti(30);
-    earnStar(3);
-
+    boostParticles(3000); launchConfetti(30); earnStar(3);
+    hideHeartHint();
     document.getElementById('gestureHint').classList.remove('visible');
     checkAllSecrets();
 }
 
 // ============================================
-// GESTURE HINT
+// HEART GESTURE HINTS — ПОДСКАЗКИ
 // ============================================
 function resetIdleTimer() {
     clearTimeout(idleTimer);
-    if (!secret1Found) idleTimer = setTimeout(showGestureHint, 20000);
+    if (!secret1Found) {
+        // Через 15 сек бездействия — текстовая подсказка
+        idleTimer = setTimeout(() => {
+            showGestureHint();
+            // Ещё через 10 сек — визуальная подсказка с сердцем
+            setTimeout(() => {
+                if (!secret1Found) showHeartHintIcon();
+            }, 10000);
+        }, 15000);
+    }
 }
 
 function checkGestureHint() {
-    if (wrongGestureCount >= 3 && !secret1Found) showGestureHint();
+    if (wrongGestureCount >= 2 && !secret1Found) {
+        showGestureHint();
+    }
+    if (wrongGestureCount >= 4 && !secret1Found) {
+        showHeartHintIcon();
+    }
 }
 
 function showGestureHint() {
     if (secret1Found) return;
     const hint = document.getElementById('gestureHint');
     hint.classList.add('visible');
-    setTimeout(() => hint.classList.remove('visible'), 5000);
+    setTimeout(() => hint.classList.remove('visible'), 6000);
+}
+
+// Визуальная подсказка: пульсирующее сердечко
+function showHeartHintIcon() {
+    if (secret1Found || heartHintShown) return;
+    heartHintShown = true;
+    document.getElementById('heartHintIcon').classList.add('visible');
+    // Через 8 сек убрать
+    setTimeout(() => hideHeartHint(), 8000);
+}
+
+function hideHeartHint() {
+    document.getElementById('heartHintIcon').classList.remove('visible');
 }
 
 resetIdleTimer();
@@ -1706,9 +1706,7 @@ resetIdleTimer();
 // ============================================
 const holdArea = document.getElementById('holdArea');
 const holdCircle = document.getElementById('holdCircle');
-let holdStartTime = null;
-let holdAnimFrame = null;
-let isHolding = false;
+let holdStartTime = null, holdAnimFrame = null, isHolding = false;
 const HOLD_DURATION = 3000;
 
 holdArea.addEventListener('touchstart', startHold, { passive: true });
@@ -1723,6 +1721,8 @@ function startHold() {
     isHolding = true;
     holdStartTime = performance.now();
     holdArea.classList.add('holding');
+    // Скрыть подсказку-палец при начале удержания
+    document.getElementById('holdFingerHint').classList.remove('visible');
     animateHoldRing();
 }
 
@@ -1730,10 +1730,11 @@ function endHold() {
     if (secret2Found) return;
     if (isHolding && holdStartTime) {
         const elapsed = performance.now() - holdStartTime;
-        if (elapsed < HOLD_DURATION) showHoldHint('Почти… попробуй чуть дольше ❤️');
+        if (elapsed < HOLD_DURATION) {
+            showHoldHint('Почти… попробуй чуть дольше ❤️');
+        }
     }
-    isHolding = false;
-    holdStartTime = null;
+    isHolding = false; holdStartTime = null;
     holdArea.classList.remove('holding');
     cancelAnimationFrame(holdAnimFrame);
     holdCircle.style.strokeDashoffset = '283';
@@ -1752,32 +1753,45 @@ function triggerSecret2() {
     secret2Found = true;
     isHolding = false;
     holdArea.classList.remove('holding');
-
     if (navigator.vibrate) navigator.vibrate(100);
-
-    playHeartbeat();
-    duckMusic(3000);
-
+    playHeartbeat(); duckMusic(3000);
     document.getElementById('holdOverlay').classList.add('visible');
-    boostParticles(2000);
-    earnStar(4);
-
+    boostParticles(2000); earnStar(4);
     document.getElementById('holdHint').classList.remove('visible');
+    document.getElementById('holdFingerHint').classList.remove('visible');
     checkAllSecrets();
 }
 
+// ============================================
+// HOLD HINTS — ПОДСКАЗКИ ДЛЯ УДЕРЖАНИЯ
+// ============================================
+
+// Текстовая подсказка через 10 сек на экране 7
 function startHoldHintTimer() {
     clearTimeout(holdHintTimer);
     holdHintTimer = setTimeout(() => {
-        if (!secret2Found) showHoldHint('Иногда секреты открываются тем, кто не спешит…');
+        if (!secret2Found) {
+            showHoldHint('Иногда секреты открываются тем, кто не спешит…');
+        }
     }, 10000);
+}
+
+// Визуальная подсказка ☝️ на смайлике через 18 сек
+function startHoldFingerTimer() {
+    clearTimeout(holdFingerTimer);
+    holdFingerTimer = setTimeout(() => {
+        if (!secret2Found) {
+            document.getElementById('holdFingerHint').classList.add('visible');
+            showHoldHint('Задержи палец на ✨ и подожди…');
+        }
+    }, 18000);
 }
 
 function showHoldHint(text) {
     const hint = document.getElementById('holdHint');
     hint.textContent = text;
     hint.classList.add('visible');
-    setTimeout(() => hint.classList.remove('visible'), 4000);
+    setTimeout(() => hint.classList.remove('visible'), 5000);
 }
 
 // ============================================
@@ -1788,43 +1802,22 @@ function closeOverlay(id) {
 }
 
 // ============================================
-// CHECK ALL COMPLETE
+// CHECK ALL
 // ============================================
 function checkAllSecrets() {
     if (riddleSolved && gameSolved && secret1Found && secret2Found) {
         setTimeout(() => {
             document.getElementById('finalBadge').classList.add('visible');
-            launchConfetti(60);
-            boostParticles(4000);
-            playHeartbeat();
+            launchConfetti(60); boostParticles(4000); playHeartbeat();
         }, 2000);
     }
 }
 
 // ============================================
-// SWIPE NAVIGATION
+// NO SWIPE NAVIGATION — навигация только кнопками
+// (свайп полностью убран)
 // ============================================
-let touchStartY = 0, touchStartX = 0;
 
-document.addEventListener('touchstart', (e) => {
-    if (isInteractive(e.target) || e.target.closest('.screen-scroll')) return;
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-    if (isInteractive(e.target) || e.target.closest('.screen-scroll')) return;
-    const t = e.changedTouches[0];
-    const dy = touchStartY - t.clientY;
-    const dx = touchStartX - t.clientX;
-    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 60) {
-        goToScreen(dy > 0 ? currentScreen + 1 : currentScreen - 1);
-    }
-}, { passive: true });
-
-// ============================================
-// INIT
-// ============================================
 console.log(`%c💝 Сделано с любовью для ${girlName}`, 'font-size:16px; color:#e8456b;');
 </script>
 
