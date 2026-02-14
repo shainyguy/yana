@@ -5,26 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Для тебя моя дорогая Яночка ❤️</title>
     <style>
+        /* ============================================
+           СВЕТЛАЯ РОЗОВАЯ ТЕМА
+           ============================================ */
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --accent: #ff4d6d;
-            --accent-glow: rgba(255, 77, 109, 0.4);
-            --accent-soft: rgba(255, 77, 109, 0.15);
-            --text-primary: #f0e6ef;
-            --text-secondary: rgba(240, 230, 239, 0.7);
-            --glass-bg: rgba(255, 255, 255, 0.06);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-bg-strong: rgba(255, 255, 255, 0.1);
-            --gold: #ffd700;
-            --gold-glow: rgba(255, 215, 0, 0.3);
-            --success: #4ade80;
+            --bg-primary: #fff0f3;
+            --bg-secondary: #ffe4ec;
+            --bg-gradient: linear-gradient(160deg, #fff5f7 0%, #ffe0e9 30%, #ffd6e0 60%, #ffccd5 100%);
+            --accent: #e8456b;
+            --accent-light: #ff6b8a;
+            --accent-glow: rgba(232, 69, 107, 0.3);
+            --accent-soft: rgba(232, 69, 107, 0.1);
+            --accent-bg: rgba(232, 69, 107, 0.06);
+            --text-primary: #4a2030;
+            --text-secondary: rgba(74, 32, 48, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(232, 69, 107, 0.15);
+            --glass-bg-strong: rgba(255, 255, 255, 0.7);
+            --gold: #e8a020;
+            --gold-glow: rgba(232, 160, 32, 0.4);
+            --success: #34b870;
+            --shadow-soft: 0 4px 24px rgba(232, 69, 107, 0.1);
+            --shadow-card: 0 8px 32px rgba(232, 69, 107, 0.12);
             --transition-smooth: 700ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -37,13 +44,94 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-gradient);
             color: var(--text-primary);
             min-height: 100vh;
             min-height: 100dvh;
             line-height: 1.6;
             -webkit-user-select: none;
             user-select: none;
+        }
+
+        /* Фоновые декоративные круги */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.4), transparent 70%);
+            top: -80px; right: -80px;
+        }
+
+        body::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255, 192, 203, 0.3), transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* ============ MUSIC BUTTON ============ */
+        #musicToggle {
+            position: fixed;
+            top: 16px; left: 16px;
+            z-index: 200;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-soft);
+        }
+
+        #musicToggle:active { transform: scale(0.9); }
+        #musicToggle.playing { box-shadow: 0 0 20px var(--accent-glow); }
+
+        .music-bars {
+            display: flex; gap: 2px; align-items: flex-end; height: 16px;
+        }
+
+        .music-bars span {
+            width: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+
+        .music-bars span:nth-child(1) { height: 6px; }
+        .music-bars span:nth-child(2) { height: 12px; }
+        .music-bars span:nth-child(3) { height: 8px; }
+        .music-bars span:nth-child(4) { height: 14px; }
+
+        #musicToggle.playing .music-bars span {
+            animation: musicBounce 0.8s ease-in-out infinite alternate;
+        }
+
+        #musicToggle.playing .music-bars span:nth-child(1) { animation-delay: 0s; }
+        #musicToggle.playing .music-bars span:nth-child(2) { animation-delay: 0.15s; }
+        #musicToggle.playing .music-bars span:nth-child(3) { animation-delay: 0.3s; }
+        #musicToggle.playing .music-bars span:nth-child(4) { animation-delay: 0.45s; }
+
+        @keyframes musicBounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        #musicToggle:not(.playing) .music-bars span {
+            height: 3px !important;
+            animation: none;
         }
 
         /* ============ PARTICLE CANVAS ============ */
@@ -106,7 +194,7 @@
             font-weight: 700;
             text-align: center;
             margin-bottom: 12px;
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, #c0365a 50%, var(--accent-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -139,9 +227,9 @@
         .btn:active { transform: scale(0.96); }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), #e0245e);
+            background: linear-gradient(135deg, var(--accent), #d63060);
             color: #fff;
-            box-shadow: 0 4px 24px var(--accent-glow);
+            box-shadow: 0 4px 20px var(--accent-glow);
         }
 
         .btn-glass {
@@ -150,6 +238,7 @@
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-soft);
         }
 
         .btn-small {
@@ -162,7 +251,7 @@
         .btn .ripple {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
             transform: scale(0);
             animation: rippleAnim 0.6s ease-out;
             pointer-events: none;
@@ -183,6 +272,7 @@
             max-width: 360px;
             width: 100%;
             text-align: center;
+            box-shadow: var(--shadow-card);
         }
 
         /* ============ PHOTO ============ */
@@ -192,16 +282,19 @@
             border-radius: 50%;
             overflow: hidden;
             margin-bottom: 20px;
-            border: 3px solid var(--accent-glow);
-            box-shadow: 0 0 40px var(--accent-glow);
+            border: 3px solid rgba(232, 69, 107, 0.3);
+            box-shadow: 0 0 40px rgba(232, 69, 107, 0.15),
+                        0 0 80px rgba(255, 192, 203, 0.2);
+        }
+
+        .photo-container img {
+            width: 100%; height: 100%; object-fit: cover;
         }
 
         .photo-placeholder {
             width: 100%; height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--accent-soft), var(--bg-secondary));
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--bg-secondary), #ffd6e0);
             font-size: 56px;
         }
 
@@ -258,6 +351,7 @@
 
         .timeline-content h3 {
             font-size: 15px; font-weight: 600; margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .timeline-content p {
@@ -279,13 +373,18 @@
             overflow: hidden;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
         }
 
         .gallery-placeholder {
             width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
             font-size: 36px;
-            background: linear-gradient(135deg, var(--accent-soft), var(--bg-secondary));
+            background: linear-gradient(135deg, var(--bg-secondary), #ffd6e0);
         }
 
         /* ============ TRAITS ============ */
@@ -303,17 +402,15 @@
             font-size: 14px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--shadow-soft);
+            color: var(--text-primary);
         }
 
-        /* ============ RIDDLE (Screen 4) ============ */
-        .riddle-box {
-            width: 100%; max-width: 340px;
-            text-align: center;
-        }
+        /* ============ RIDDLE ============ */
+        .riddle-box { width: 100%; max-width: 340px; text-align: center; }
 
         .riddle-text {
-            font-size: 16px;
-            line-height: 1.8;
+            font-size: 16px; line-height: 1.8;
             color: var(--text-primary);
             margin-bottom: 20px;
             font-style: italic;
@@ -336,21 +433,20 @@
             text-align: left;
             min-height: 48px;
             display: flex; align-items: center; gap: 12px;
+            box-shadow: var(--shadow-soft);
         }
 
-        .riddle-option:active {
-            transform: scale(0.97);
-        }
+        .riddle-option:active { transform: scale(0.97); }
 
         .riddle-option.correct {
             border-color: var(--success);
-            background: rgba(74, 222, 128, 0.15);
-            box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+            background: rgba(52, 184, 112, 0.12);
+            box-shadow: 0 0 20px rgba(52, 184, 112, 0.2);
         }
 
         .riddle-option.wrong {
-            border-color: #f87171;
-            background: rgba(248, 113, 113, 0.1);
+            border-color: #e84545;
+            background: rgba(232, 69, 69, 0.08);
             animation: shake 0.5s ease;
         }
 
@@ -363,34 +459,20 @@
         }
 
         .riddle-result {
-            margin-top: 20px;
-            font-size: 16px;
-            opacity: 0;
-            transform: scale(0.8);
+            margin-top: 20px; font-size: 16px;
+            opacity: 0; transform: scale(0.8);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .riddle-result.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .riddle-result.visible { opacity: 1; transform: scale(1); }
 
-        .riddle-emoji {
-            font-size: 40px;
-            display: block;
-            margin-bottom: 8px;
-        }
+        .riddle-emoji { font-size: 40px; display: block; margin-bottom: 8px; }
 
-        /* ============ PUZZLE GAME (Screen 5) ============ */
-        .puzzle-container {
-            width: 100%; max-width: 320px;
-            text-align: center;
-        }
+        /* ============ PUZZLE GAME ============ */
+        .puzzle-container { width: 100%; max-width: 320px; text-align: center; }
 
         .puzzle-instruction {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
+            font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;
         }
 
         .puzzle-grid {
@@ -400,30 +482,25 @@
             width: min(280px, 80vw);
             height: min(280px, 80vw);
             margin: 0 auto;
-            perspective: 600px;
         }
 
         .puzzle-cell {
             background: var(--glass-bg);
             border: 1.5px solid var(--glass-border);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: clamp(24px, 8vw, 36px);
             cursor: pointer;
             transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
             aspect-ratio: 1;
             will-change: transform;
-            position: relative;
+            box-shadow: var(--shadow-soft);
         }
 
-        .puzzle-cell:active {
-            transform: scale(0.92);
-        }
+        .puzzle-cell:active { transform: scale(0.92); }
 
         .puzzle-cell.flipped {
-            background: var(--accent-soft);
+            background: rgba(232, 69, 107, 0.08);
             border-color: var(--accent);
             animation: flipIn 0.4s ease;
         }
@@ -434,9 +511,9 @@
         }
 
         .puzzle-cell.matched {
-            background: rgba(74, 222, 128, 0.12);
+            background: rgba(52, 184, 112, 0.1);
             border-color: var(--success);
-            box-shadow: 0 0 16px rgba(74, 222, 128, 0.2);
+            box-shadow: 0 0 16px rgba(52, 184, 112, 0.15);
         }
 
         .puzzle-cell .cell-back {
@@ -445,42 +522,24 @@
         }
 
         .puzzle-stats {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-top: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
+            display: flex; justify-content: center; gap: 24px;
+            margin-top: 16px; font-size: 14px; color: var(--text-secondary);
         }
 
-        .puzzle-stats span {
-            color: var(--accent);
-            font-weight: 600;
-        }
+        .puzzle-stats span { color: var(--accent); font-weight: 600; }
 
         .puzzle-complete {
-            margin-top: 20px;
-            opacity: 0;
-            transform: translateY(20px);
+            margin-top: 20px; opacity: 0; transform: translateY(20px);
             transition: all 0.6s ease;
         }
 
-        .puzzle-complete.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .puzzle-complete.visible { opacity: 1; transform: translateY(0); }
 
-        .puzzle-complete .complete-emoji {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 8px;
-        }
+        .puzzle-complete .complete-emoji { font-size: 48px; display: block; margin-bottom: 8px; }
 
         .puzzle-complete .complete-text {
-            font-size: 16px;
-            line-height: 1.7;
-            color: var(--text-primary);
-            margin-bottom: 16px;
+            font-size: 16px; line-height: 1.7;
+            color: var(--text-primary); margin-bottom: 16px;
         }
 
         /* ============ OVERLAYS ============ */
@@ -489,74 +548,57 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             padding: 24px;
-            opacity: 0;
-            pointer-events: none;
+            opacity: 0; pointer-events: none;
             transition: opacity 0.5s ease;
         }
 
-        .overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .overlay.visible { opacity: 1; pointer-events: auto; }
 
         .overlay-bg {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 240, 243, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .overlay-card {
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
             background: var(--glass-bg-strong);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 36px 26px;
-            max-width: 340px;
-            width: 100%;
+            max-width: 340px; width: 100%;
             text-align: center;
-            transform: scale(0.8);
-            opacity: 0;
+            transform: scale(0.8); opacity: 0;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
                         opacity 0.5s ease;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-card);
         }
 
         .overlay.visible .overlay-card {
-            transform: scale(1);
-            opacity: 1;
+            transform: scale(1); opacity: 1;
             transition-delay: 0.2s;
         }
 
-        .overlay-card .overlay-emoji {
-            font-size: 48px; margin-bottom: 14px; display: block;
-        }
+        .overlay-card .overlay-emoji { font-size: 48px; margin-bottom: 14px; display: block; }
 
         .overlay-card .overlay-text {
             font-size: 17px; line-height: 1.7; color: var(--text-primary);
         }
 
         .overlay-card .overlay-close {
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 10px;
+            margin-top: 20px; font-size: 14px;
+            color: var(--text-secondary); cursor: pointer; padding: 10px;
         }
 
         .overlay-card .signature {
-            font-size: 16px;
-            color: var(--accent);
-            font-style: italic;
-            margin-top: 14px;
+            font-size: 16px; color: var(--accent);
+            font-style: italic; margin-top: 14px;
         }
 
         /* ============ HOLD AREA ============ */
@@ -564,61 +606,47 @@
             position: relative;
             width: 110px; height: 110px;
             margin: 16px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
 
         .hold-glow {
-            position: absolute;
-            width: 100%; height: 100%;
+            position: absolute; width: 100%; height: 100%;
             border-radius: 50%;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            opacity: 0;
-            transform: scale(0.5);
+            opacity: 0; transform: scale(0.5);
             transition: opacity 0.3s ease, transform 0.3s ease;
             pointer-events: none;
         }
 
-        .hold-area.holding .hold-glow {
-            opacity: 1;
-            transform: scale(1.3);
-        }
+        .hold-area.holding .hold-glow { opacity: 1; transform: scale(1.3); }
 
         .hold-ring {
             position: absolute;
             width: 85px; height: 85px;
-            border-radius: 50%;
-            pointer-events: none;
+            border-radius: 50%; pointer-events: none;
         }
 
         .hold-ring svg {
-            width: 100%; height: 100%;
-            transform: rotate(-90deg);
+            width: 100%; height: 100%; transform: rotate(-90deg);
         }
 
         .hold-ring svg circle {
             fill: none;
             stroke: var(--accent);
-            stroke-width: 2;
+            stroke-width: 2.5;
             stroke-dasharray: 283;
             stroke-dashoffset: 283;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.1s linear;
         }
 
-        .hold-icon {
-            font-size: 30px;
-            z-index: 1;
-            position: relative;
-        }
+        .hold-icon { font-size: 30px; z-index: 1; position: relative; }
 
         /* ============ HINTS ============ */
         .hint-bar {
             position: fixed;
-            bottom: 36px;
-            left: 50%;
+            bottom: 36px; left: 50%;
             transform: translateX(-50%);
             z-index: 50;
             font-size: 13px;
@@ -628,6 +656,12 @@
             opacity: 0;
             transition: opacity 1s ease;
             pointer-events: none;
+            background: var(--glass-bg);
+            padding: 10px 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
         }
 
         .hint-bar.visible { opacity: 1; }
@@ -635,8 +669,7 @@
         /* ============ FINAL BADGE ============ */
         #finalBadge {
             position: fixed;
-            bottom: 24px;
-            left: 50%;
+            bottom: 24px; left: 50%;
             transform: translateX(-50%);
             z-index: 90;
             font-size: 13px;
@@ -646,6 +679,12 @@
             transition: opacity 1s ease;
             pointer-events: none;
             max-width: 280px;
+            background: var(--glass-bg);
+            padding: 12px 20px;
+            border-radius: 14px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
         }
 
         #finalBadge.visible { opacity: 1; }
@@ -656,7 +695,7 @@
             width: 8px; height: 8px;
             border-radius: 50%;
             background: var(--accent);
-            opacity: 0.6;
+            opacity: 0.5;
             pointer-events: none;
             z-index: 3;
             transform: translate(-50%, -50%);
@@ -670,45 +709,46 @@
         /* ============ NAV DOTS ============ */
         .nav-dots {
             position: fixed;
-            right: 10px;
-            top: 50%;
+            right: 10px; top: 50%;
             transform: translateY(-50%);
             z-index: 50;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            display: flex; flex-direction: column; gap: 8px;
         }
 
         .nav-dot {
             width: 8px; height: 8px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(232, 69, 107, 0.2);
             transition: background 0.3s ease, transform 0.3s ease;
             cursor: pointer;
         }
 
         .nav-dot.active {
             background: var(--accent);
-            transform: scale(1.3);
+            transform: scale(1.4);
         }
 
         /* ============ PROGRESS STARS ============ */
         .progress-bar {
             position: fixed;
-            top: 16px;
-            left: 50%;
+            top: 16px; left: 50%;
             transform: translateX(-50%);
             z-index: 50;
-            display: flex;
-            gap: 8px;
+            display: flex; gap: 8px;
             opacity: 0;
             transition: opacity 0.5s ease;
+            background: var(--glass-bg);
+            padding: 6px 14px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
         }
 
         .progress-bar.visible { opacity: 1; }
 
         .progress-star {
-            font-size: 18px;
+            font-size: 16px;
             opacity: 0.3;
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             transform: scale(0.8);
@@ -716,15 +756,14 @@
 
         .progress-star.earned {
             opacity: 1;
-            transform: scale(1.1);
+            transform: scale(1.15);
             filter: drop-shadow(0 0 6px var(--gold-glow));
         }
 
         /* ============ CONFETTI ============ */
         .confetti-piece {
             position: fixed;
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             z-index: 200;
             pointer-events: none;
             border-radius: 2px;
@@ -732,18 +771,94 @@
         }
 
         @keyframes confettiFall {
-            0% {
-                opacity: 1;
-                transform: translateY(0) rotate(0deg) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(100vh) rotate(720deg) scale(0.3);
-            }
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.3); }
+        }
+
+        /* ============ HEARTBEAT FLASH ============ */
+        .heartbeat-flash {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(232, 69, 107, 0.15), transparent 70%);
+            z-index: 99;
+            pointer-events: none;
+            opacity: 0;
+            animation: hbFlash 0.6s ease-out;
+        }
+
+        @keyframes hbFlash {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        /* ============ MUSIC PROMPT ============ */
+        #musicPrompt {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 300;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 240, 243, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        #musicPrompt.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .prompt-card {
+            text-align: center;
+            max-width: 300px;
+            padding: 20px;
+        }
+
+        .prompt-card .prompt-emoji {
+            font-size: 56px; margin-bottom: 16px;
+        }
+
+        .prompt-card .prompt-title {
+            font-size: 22px; font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .prompt-card .prompt-sub {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .prompt-buttons {
+            display: flex; flex-direction: column; gap: 10px;
         }
     </style>
 </head>
 <body>
+
+<!-- ============ MUSIC PROMPT (нужен клик для autoplay) ============ -->
+<div id="musicPrompt">
+    <div class="prompt-card">
+        <div class="prompt-emoji">🎵</div>
+        <div class="prompt-title" id="promptTitle"></div>
+        <div class="prompt-sub">Включить музыку для атмосферы?</div>
+        <div class="prompt-buttons">
+            <button class="btn btn-primary" onclick="startWithMusic()">С музыкой 🎶</button>
+            <button class="btn btn-glass" onclick="startWithoutMusic()">Без музыки</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MUSIC TOGGLE ============ -->
+<button id="musicToggle" onclick="toggleMusic()" style="display:none;">
+    <div class="music-bars">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</button>
 
 <canvas id="particleCanvas"></canvas>
 
@@ -763,7 +878,7 @@
     <div class="reveal-item">
         <div class="photo-container">
             <!-- ЗАМЕНИТЬ: <img src="photo.jpg" alt="" loading="lazy"> -->
-            <img src="https://sun9-35.userapi.com/s/v1/ig2/0k59zA5qvVDrEi01X1GlttTEjRi905PWxKOjm-AYKrcvFfMVHIAqxs_COgSmLPGeGGd6l93AlHXrXpHpMKYLze_n.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&cs=1920x0" alt="" loading="lazy">
+            <img src="https://clck.ru/3RoZbK" alt="Мы в лесу" width="250" loading="lazy">
         </div>
     </div>
     <h1 class="title reveal-item" id="welcomeTitle"></h1>
@@ -776,7 +891,7 @@
     <h1 class="title reveal-item">Наша история</h1>
     <p class="subtitle reveal-item" id="storySubtitle"></p>
     <div class="timeline">
-        <!-- ЗАМЕНИТЬ: тексты на ваши реальные моменты -->
+        <!-- ЗАМЕНИТЬ: ваши реальные моменты -->
         <div class="timeline-item reveal-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
@@ -814,7 +929,7 @@
     <h1 class="title reveal-item">Моменты</h1>
     <p class="subtitle reveal-item">Каждый из них — бесценен</p>
     <div class="gallery-grid">
-        <!-- ЗАМЕНИТЬ: добавить свои фото -->
+        <!-- ЗАМЕНИТЬ: ваши фото -->
         <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌅</div></div>
         <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌙</div></div>
         <div class="gallery-item reveal-item"><div class="gallery-placeholder">☀️</div></div>
@@ -823,37 +938,30 @@
     <button class="btn btn-glass reveal-item" style="margin-top:28px;" onclick="goToScreen(4)">Дальше →</button>
 </div>
 
-<!-- ============ SCREEN 4 — RIDDLE / ЗАГАДКА ============ -->
+<!-- ============ SCREEN 4 — ЗАГАДКА ============ -->
 <div class="screen" id="screen4">
     <h1 class="title reveal-item">Загадка 🔮</h1>
     <p class="subtitle reveal-item" id="riddleIntro"></p>
-
     <div class="riddle-box glass-card reveal-item" id="riddleBox">
         <p class="riddle-text" id="riddleText"></p>
-        <div class="riddle-options" id="riddleOptions">
-            <!-- Заполняется из JS -->
-        </div>
+        <div class="riddle-options" id="riddleOptions"></div>
         <div class="riddle-result" id="riddleResult">
             <span class="riddle-emoji" id="riddleEmoji"></span>
             <p id="riddleResultText"></p>
         </div>
     </div>
-
     <button class="btn btn-glass reveal-item" style="margin-top:24px; opacity:0; pointer-events:none;" id="riddleNextBtn" onclick="goToScreen(5)">
         К следующему испытанию →
     </button>
 </div>
 
-<!-- ============ SCREEN 5 — MEMORY GAME / ИГРА ============ -->
+<!-- ============ SCREEN 5 — ИГРА MEMORY ============ -->
 <div class="screen" id="screen5">
     <h1 class="title reveal-item">Найди пару 💫</h1>
     <p class="subtitle reveal-item" id="gameIntro"></p>
-
     <div class="puzzle-container reveal-item">
         <p class="puzzle-instruction">Переверни карточки и найди все пары</p>
-        <div class="puzzle-grid" id="puzzleGrid">
-            <!-- Заполняется из JS -->
-        </div>
+        <div class="puzzle-grid" id="puzzleGrid"></div>
         <div class="puzzle-stats">
             <div>Ходы: <span id="moveCount">0</span></div>
             <div>Пары: <span id="pairCount">0</span>/4</div>
@@ -889,7 +997,6 @@
     <div class="glass-card reveal-item">
         <p style="font-size:15px; line-height:1.8;" id="finalMessage"></p>
     </div>
-    <!-- SECRET #2: HOLD 3s -->
     <div class="hold-area reveal-item" id="holdArea">
         <div class="hold-glow"></div>
         <div class="hold-ring">
@@ -902,7 +1009,7 @@
     </p>
 </div>
 
-<!-- ============ SECRET #1 OVERLAY ============ -->
+<!-- ============ SECRET OVERLAYS ============ -->
 <div class="overlay" id="secretOverlay">
     <div class="overlay-bg" onclick="closeOverlay('secretOverlay')"></div>
     <div class="overlay-card">
@@ -912,12 +1019,11 @@
     </div>
 </div>
 
-<!-- ============ SECRET #2 OVERLAY ============ -->
 <div class="overlay" id="holdOverlay">
     <div class="overlay-bg" onclick="closeOverlay('holdOverlay')"></div>
     <div class="overlay-card">
         <p class="overlay-text">Ты умеешь ждать.</p>
-        <p class="overlay-text">И я ждал именно тебя.</p>
+        <p class="overlay-text" style="margin-top:4px;">И я ждал именно тебя.</p>
         <p class="signature" id="holdSignature"></p>
         <div class="overlay-close" onclick="closeOverlay('holdOverlay')">Коснись, чтобы закрыть</div>
     </div>
@@ -925,27 +1031,113 @@
 
 <!-- HINTS -->
 <div class="hint-bar" id="gestureHint">Иногда достаточно нарисовать то, что чувствуешь… ❤️</div>
-<div class="hint-bar" id="holdHint"></div>
+<div class="hint-bar" id="holdHint" style="bottom: 90px;"></div>
 
 <!-- FINAL BADGE -->
 <div id="finalBadge"></div>
 
-<!-- AUDIO -->
-<!-- ЗАМЕНИТЬ: src на heartbeat.mp3 -->
+<!-- ============ AUDIO ============ -->
+<!--
+    ИНСТРУКЦИЯ:
+    1. Скачай фоновую музыку и сохрани как music.mp3 рядом с index.html
+    2. Скачай звук сердцебиения и сохрани как heartbeat.mp3 рядом с index.html
+-->
+<audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <audio id="heartbeatAudio" preload="auto">
-    <!-- <source src="heartbeat.mp3" type="audio/mpeg"> -->
+    <source src="heartbeat.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 // ============================================
-// ПЕРСОНАЛИЗАЦИЯ — ИЗМЕНИТЕ ИМЕНА ЗДЕСЬ
+// ПЕРСОНАЛИЗАЦИЯ — ИЗМЕНИ ИМЕНА ЗДЕСЬ
 // ============================================
 const girlName = "Яна";
 const boyName = "Кирилл";
 
 // ============================================
+// AUDIO SYSTEM
+// ============================================
+const bgMusic = document.getElementById('bgMusic');
+const heartbeatAudio = document.getElementById('heartbeatAudio');
+let musicEnabled = false;
+
+bgMusic.volume = 0.4;         // Громкость фоновой музыки (0-1)
+heartbeatAudio.volume = 0.6;  // Громкость сердцебиения (0-1)
+
+function startWithMusic() {
+    musicEnabled = true;
+    bgMusic.play().catch(() => {});
+    document.getElementById('musicToggle').style.display = 'flex';
+    document.getElementById('musicToggle').classList.add('playing');
+    closeMusicPrompt();
+}
+
+function startWithoutMusic() {
+    musicEnabled = false;
+    document.getElementById('musicToggle').style.display = 'flex';
+    closeMusicPrompt();
+}
+
+function closeMusicPrompt() {
+    document.getElementById('musicPrompt').classList.add('hidden');
+    setTimeout(() => triggerRevealItems(document.getElementById('screen1')), 400);
+}
+
+function toggleMusic() {
+    const btn = document.getElementById('musicToggle');
+    if (bgMusic.paused) {
+        bgMusic.play().catch(() => {});
+        btn.classList.add('playing');
+        musicEnabled = true;
+    } else {
+        bgMusic.pause();
+        btn.classList.remove('playing');
+        musicEnabled = false;
+    }
+}
+
+// Воспроизвести звук сердцебиения + визуальная вспышка
+function playHeartbeat() {
+    heartbeatAudio.currentTime = 0;
+    heartbeatAudio.play().catch(() => {});
+
+    // Визуальная пульсация экрана
+    const flash = document.createElement('div');
+    flash.className = 'heartbeat-flash';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 600);
+
+    if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+}
+
+// Притушить музыку в важный момент, потом вернуть
+function duckMusic(durationMs = 3000) {
+    if (!musicEnabled || bgMusic.paused) return;
+    const origVol = bgMusic.volume;
+    bgMusic.volume = origVol * 0.2;
+    setTimeout(() => {
+        // Плавное восстановление
+        let vol = bgMusic.volume;
+        const step = (origVol - vol) / 20;
+        const interval = setInterval(() => {
+            vol += step;
+            if (vol >= origVol) {
+                bgMusic.volume = origVol;
+                clearInterval(interval);
+            } else {
+                bgMusic.volume = vol;
+            }
+        }, 50);
+    }, durationMs);
+}
+
+// ============================================
 // DYNAMIC TEXTS
 // ============================================
+document.getElementById('promptTitle').textContent = `Это для тебя, ${girlName}`;
 document.getElementById('welcomeTitle').textContent = `Для тебя, ${girlName}`;
 document.getElementById('welcomeSubtitle').textContent = `${boyName} приготовил кое-что особенное…`;
 document.getElementById('storySubtitle').textContent = `${girlName}, помнишь?`;
@@ -1004,14 +1196,12 @@ function earnStar(num) {
     const star = document.getElementById(`star${num}`);
     if (star && !star.classList.contains('earned')) {
         star.classList.add('earned');
-        if (navigator.vibrate) navigator.vibrate(50);
+        playHeartbeat();
     }
 }
 
-// Show progress bar after screen 1
 function updateProgressVisibility() {
-    const bar = document.getElementById('progressBar');
-    bar.classList.toggle('visible', currentScreen > 1);
+    document.getElementById('progressBar').classList.toggle('visible', currentScreen > 1);
 }
 
 // ============================================
@@ -1035,6 +1225,11 @@ function goToScreen(num) {
         triggerRevealItems(nextEl);
         resetIdleTimer();
 
+        // Сердцебиение на важных экранах
+        if (num === 4 || num === 7) {
+            setTimeout(() => playHeartbeat(), 500);
+        }
+
         if (num === 5 && !gameSolved) initPuzzleGame();
         if (num === 7 && !secret2Found) startHoldHintTimer();
     }, 100);
@@ -1050,8 +1245,6 @@ function triggerRevealItems(container) {
         setTimeout(() => item.classList.add('visible'), 80 + i * 100);
     });
 }
-
-setTimeout(() => triggerRevealItems(document.getElementById('screen1')), 300);
 
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1082,7 +1275,7 @@ document.querySelectorAll('.btn').forEach(btn => {
 });
 
 // ============================================
-// PARTICLE SYSTEM
+// PARTICLE SYSTEM (розовые частицы)
 // ============================================
 const canvas = document.getElementById('particleCanvas');
 const ctx = canvas.getContext('2d');
@@ -1101,14 +1294,18 @@ class Particle {
     reset(boosted = false) {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * (boosted ? 4 : 2.5) + 0.5;
-        this.speedX = (Math.random() - 0.5) * (boosted ? 1.5 : 0.5);
-        this.speedY = (Math.random() - 0.5) * (boosted ? 1.5 : 0.5) - 0.3;
-        this.opacity = Math.random() * 0.5 + (boosted ? 0.3 : 0.1);
-        this.life = Math.random() * 200 + 100;
+        this.size = Math.random() * (boosted ? 5 : 3) + 0.8;
+        this.speedX = (Math.random() - 0.5) * (boosted ? 1.5 : 0.4);
+        this.speedY = (Math.random() - 0.5) * (boosted ? 1.5 : 0.4) - 0.2;
+        this.opacity = Math.random() * 0.4 + (boosted ? 0.2 : 0.05);
+        this.life = Math.random() * 250 + 120;
         this.maxLife = this.life;
-        const hue = 345 + Math.random() * 20 - 10;
-        this.color = `hsla(${hue}, 100%, 70%, `;
+        // Розовые/персиковые тона
+        const hues = [340, 345, 350, 355, 0, 10, 20];
+        const hue = hues[Math.floor(Math.random() * hues.length)];
+        const sat = 70 + Math.random() * 30;
+        const light = 65 + Math.random() * 20;
+        this.color = `hsla(${hue}, ${sat}%, ${light}%, `;
     }
 
     update() {
@@ -1130,7 +1327,7 @@ class Particle {
     }
 }
 
-const PARTICLE_COUNT = Math.min(50, Math.floor(window.innerWidth * window.innerHeight / 18000));
+const PARTICLE_COUNT = Math.min(45, Math.floor(window.innerWidth * window.innerHeight / 20000));
 for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
 
 function animateParticles() {
@@ -1151,7 +1348,7 @@ function boostParticles(ms = 3000) { particleBoostUntil = performance.now() + ms
 // CONFETTI
 // ============================================
 function launchConfetti(count = 40) {
-    const colors = ['#ff4d6d', '#ffd700', '#4ade80', '#60a5fa', '#f472b6', '#fbbf24'];
+    const colors = ['#ff4d6d', '#ffd700', '#ff8fab', '#ffb3c6', '#fb6f92', '#ffc2d1'];
     for (let i = 0; i < count; i++) {
         const piece = document.createElement('div');
         piece.className = 'confetti-piece';
@@ -1168,14 +1365,14 @@ function launchConfetti(count = 40) {
 }
 
 // ============================================
-// RIDDLE (Screen 4) — ЗАГАДКА
+// RIDDLE — ЗАГАДКА
 // ============================================
-// ЗАМЕНИТЬ: измените загадку и варианты на свои
+// ЗАМЕНИТЬ: вопрос и варианты на свои
 const riddle = {
     question: `Что ${boyName} заметил первым при встрече с ${girlName}?`,
     options: [
         { text: "🌟 Улыбку", correct: false },
-        { text: "✨ Глаза", correct: true },   // ЗАМЕНИТЬ: правильный ответ
+        { text: "✨ Глаза", correct: true },    // ← правильный ответ
         { text: "🎵 Голос", correct: false },
         { text: "💫 Смех", correct: false }
     ],
@@ -1187,11 +1384,8 @@ function initRiddle() {
     document.getElementById('riddleText').textContent = riddle.question;
     const container = document.getElementById('riddleOptions');
     container.innerHTML = '';
-
-    // Shuffle options
     const shuffled = [...riddle.options].sort(() => Math.random() - 0.5);
-
-    shuffled.forEach((opt, i) => {
+    shuffled.forEach(opt => {
         const btn = document.createElement('div');
         btn.className = 'riddle-option';
         btn.innerHTML = `<span>${opt.text}</span>`;
@@ -1202,23 +1396,22 @@ function initRiddle() {
 
 function handleRiddleAnswer(el, isCorrect) {
     if (riddleSolved) return;
-
     const allOptions = document.querySelectorAll('.riddle-option');
     allOptions.forEach(o => o.style.pointerEvents = 'none');
 
     if (isCorrect) {
         riddleSolved = true;
         el.classList.add('correct');
-
         if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
         boostParticles(2000);
         launchConfetti(25);
         earnStar(1);
+        playHeartbeat();
+        duckMusic(2000);
 
         document.getElementById('riddleEmoji').textContent = '🎉';
         document.getElementById('riddleResultText').textContent = riddle.correctMsg;
 
-        // Show next button
         setTimeout(() => {
             const nextBtn = document.getElementById('riddleNextBtn');
             nextBtn.style.opacity = '1';
@@ -1228,8 +1421,6 @@ function handleRiddleAnswer(el, isCorrect) {
         el.classList.add('wrong');
         document.getElementById('riddleEmoji').textContent = '💕';
         document.getElementById('riddleResultText').textContent = riddle.wrongMsg;
-
-        // Allow retry after delay
         setTimeout(() => {
             el.classList.remove('wrong');
             allOptions.forEach(o => o.style.pointerEvents = 'auto');
@@ -1238,19 +1429,16 @@ function handleRiddleAnswer(el, isCorrect) {
 
     const result = document.getElementById('riddleResult');
     result.classList.add('visible');
-    setTimeout(() => {
-        if (!isCorrect) result.classList.remove('visible');
-    }, 2000);
-
+    if (!isCorrect) setTimeout(() => result.classList.remove('visible'), 2000);
     checkAllSecrets();
 }
 
 initRiddle();
 
 // ============================================
-// MEMORY GAME (Screen 5) — ИГРА
+// MEMORY GAME — ИГРА
 // ============================================
-// ЗАМЕНИТЬ: эмодзи пар на свои
+// ЗАМЕНИТЬ: эмодзи на свои
 const puzzleEmojis = ['❤️', '💋', '🌹', '✨'];
 let puzzleCards = [];
 let flippedCards = [];
@@ -1260,31 +1448,24 @@ let puzzleLocked = false;
 
 function initPuzzleGame() {
     if (gameSolved) return;
-
-    matchedPairs = 0;
-    moveCount = 0;
-    flippedCards = [];
-    puzzleLocked = false;
+    matchedPairs = 0; moveCount = 0;
+    flippedCards = []; puzzleLocked = false;
     document.getElementById('moveCount').textContent = '0';
     document.getElementById('pairCount').textContent = '0';
     document.getElementById('puzzleComplete').classList.remove('visible');
 
-    // Create pairs and shuffle
     puzzleCards = [...puzzleEmojis, ...puzzleEmojis]
         .map((emoji, i) => ({ emoji, id: i }))
         .sort(() => Math.random() - 0.5);
 
-    // Add one extra cell to make 9 (3x3) — center is decorative
     const grid = document.getElementById('puzzleGrid');
     grid.innerHTML = '';
-
     let cardIndex = 0;
+
     for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
         cell.className = 'puzzle-cell';
-
         if (i === 4) {
-            // Center cell is decorative
             cell.innerHTML = '💝';
             cell.style.background = 'var(--accent-soft)';
             cell.style.border = '1.5px solid var(--accent)';
@@ -1298,48 +1479,37 @@ function initPuzzleGame() {
             cell.addEventListener('click', () => flipCard(cell));
             cardIndex++;
         }
-
         grid.appendChild(cell);
     }
 }
 
 function flipCard(cell) {
-    if (puzzleLocked) return;
-    if (cell.classList.contains('flipped') || cell.classList.contains('matched')) return;
-    if (cell.dataset.decorative) return;
+    if (puzzleLocked || cell.classList.contains('flipped') || cell.classList.contains('matched') || cell.dataset.decorative) return;
 
     cell.classList.add('flipped');
     cell.innerHTML = cell.dataset.emoji;
     flippedCards.push(cell);
-
-    if (navigator.vibrate) navigator.vibrate(20);
+    if (navigator.vibrate) navigator.vibrate(15);
 
     if (flippedCards.length === 2) {
         moveCount++;
         document.getElementById('moveCount').textContent = moveCount;
         puzzleLocked = true;
-
         const [a, b] = flippedCards;
 
         if (a.dataset.emoji === b.dataset.emoji) {
-            // Match!
             setTimeout(() => {
                 a.classList.add('matched');
                 b.classList.add('matched');
                 matchedPairs++;
                 document.getElementById('pairCount').textContent = matchedPairs;
-
                 if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
-
-                if (matchedPairs === puzzleEmojis.length) {
-                    onPuzzleComplete();
-                }
-
+                playHeartbeat();
+                if (matchedPairs === puzzleEmojis.length) onPuzzleComplete();
                 flippedCards = [];
                 puzzleLocked = false;
             }, 400);
         } else {
-            // No match
             setTimeout(() => {
                 a.classList.remove('flipped');
                 b.classList.remove('flipped');
@@ -1357,17 +1527,14 @@ function onPuzzleComplete() {
     earnStar(2);
     boostParticles(2500);
     launchConfetti(35);
+    duckMusic(3000);
 
     if (navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 100]);
 
     document.getElementById('puzzleCompleteText').innerHTML =
-        `Отлично, ${girlName}! 🎉<br>Ты справилась за <strong>${moveCount}</strong> ходов!<br>` +
-        `${boyName} гордится тобой 💕`;
+        `Отлично, ${girlName}! 🎉<br>Ты справилась за <strong>${moveCount}</strong> ходов!<br>${boyName} гордится тобой 💕`;
 
-    setTimeout(() => {
-        document.getElementById('puzzleComplete').classList.add('visible');
-    }, 500);
-
+    setTimeout(() => document.getElementById('puzzleComplete').classList.add('visible'), 500);
     checkAllSecrets();
 }
 
@@ -1379,7 +1546,7 @@ let isDrawing = false;
 let trailElements = [];
 
 function isInteractive(el) {
-    return el.closest('.btn, .hold-area, .overlay.visible, .nav-dot, .riddle-option, .puzzle-cell, .overlay-close');
+    return el.closest('.btn, .hold-area, .overlay.visible, .nav-dot, .riddle-option, .puzzle-cell, .overlay-close, #musicToggle, #musicPrompt');
 }
 
 document.addEventListener('touchstart', (e) => {
@@ -1463,46 +1630,32 @@ function clearTrails() {
 // ============================================
 function recognizeHeart(points) {
     if (points.length < 30) return false;
-
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     points.forEach(p => {
         minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
         minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
     });
-
     const w = maxX - minX, h = maxY - minY;
     if (w < 50 || h < 50) return false;
-
     const aspect = w / h;
     if (aspect < 0.5 || aspect > 1.8) return false;
 
-    const norm = points.map(p => ({
-        x: (p.x - minX) / w,
-        y: (p.y - minY) / h
-    }));
+    const norm = points.map(p => ({ x: (p.x - minX) / w, y: (p.y - minY) / h }));
 
-    // Bottom point near center
     let lowestY = -1, lowestPoint = null;
-    norm.forEach(p => {
-        if (p.y > lowestY) { lowestY = p.y; lowestPoint = p; }
-    });
+    norm.forEach(p => { if (p.y > lowestY) { lowestY = p.y; lowestPoint = p; } });
     if (!lowestPoint || lowestPoint.x < 0.2 || lowestPoint.x > 0.8 || lowestPoint.y < 0.65) return false;
 
-    // Top has points on both sides
     const topPoints = norm.filter(p => p.y < 0.4);
     if (topPoints.length < 4) return false;
-    const topLeft = topPoints.filter(p => p.x < 0.4);
-    const topRight = topPoints.filter(p => p.x > 0.6);
-    if (topLeft.length < 2 || topRight.length < 2) return false;
+    if (topPoints.filter(p => p.x < 0.4).length < 2 || topPoints.filter(p => p.x > 0.6).length < 2) return false;
 
-    // Path crosses center
     let crossings = 0;
     for (let i = 1; i < norm.length; i++) {
         if ((norm[i].x >= 0.5) !== (norm[i - 1].x >= 0.5)) crossings++;
     }
     if (crossings < 2) return false;
 
-    // Closed-ish shape
     const start = points[0], end = points[points.length - 1];
     if (Math.hypot(start.x - end.x, start.y - end.y) > Math.max(w, h) * 0.5) return false;
 
@@ -1515,8 +1668,8 @@ function triggerSecret1() {
 
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
 
-    const audio = document.getElementById('heartbeatAudio');
-    if (audio.src || audio.querySelector('source')) audio.play().catch(() => {});
+    playHeartbeat();
+    duckMusic(4000);
 
     document.getElementById('secretOverlay').classList.add('visible');
     boostParticles(3000);
@@ -1532,9 +1685,7 @@ function triggerSecret1() {
 // ============================================
 function resetIdleTimer() {
     clearTimeout(idleTimer);
-    if (!secret1Found) {
-        idleTimer = setTimeout(showGestureHint, 20000);
-    }
+    if (!secret1Found) idleTimer = setTimeout(showGestureHint, 20000);
 }
 
 function checkGestureHint() {
@@ -1579,9 +1730,7 @@ function endHold() {
     if (secret2Found) return;
     if (isHolding && holdStartTime) {
         const elapsed = performance.now() - holdStartTime;
-        if (elapsed < HOLD_DURATION) {
-            showHoldHint('Почти… попробуй чуть дольше ❤️');
-        }
+        if (elapsed < HOLD_DURATION) showHoldHint('Почти… попробуй чуть дольше ❤️');
     }
     isHolding = false;
     holdStartTime = null;
@@ -1592,14 +1741,9 @@ function endHold() {
 
 function animateHoldRing() {
     if (!isHolding || secret2Found) return;
-    const elapsed = performance.now() - holdStartTime;
-    const progress = Math.min(elapsed / HOLD_DURATION, 1);
+    const progress = Math.min((performance.now() - holdStartTime) / HOLD_DURATION, 1);
     holdCircle.style.strokeDashoffset = 283 * (1 - progress);
-
-    if (progress >= 1) {
-        triggerSecret2();
-        return;
-    }
+    if (progress >= 1) { triggerSecret2(); return; }
     holdAnimFrame = requestAnimationFrame(animateHoldRing);
 }
 
@@ -1610,6 +1754,10 @@ function triggerSecret2() {
     holdArea.classList.remove('holding');
 
     if (navigator.vibrate) navigator.vibrate(100);
+
+    playHeartbeat();
+    duckMusic(3000);
+
     document.getElementById('holdOverlay').classList.add('visible');
     boostParticles(2000);
     earnStar(4);
@@ -1648,25 +1796,24 @@ function checkAllSecrets() {
             document.getElementById('finalBadge').classList.add('visible');
             launchConfetti(60);
             boostParticles(4000);
+            playHeartbeat();
         }, 2000);
     }
 }
 
 // ============================================
-// SWIPE NAVIGATION (non-scroll screens)
+// SWIPE NAVIGATION
 // ============================================
 let touchStartY = 0, touchStartX = 0;
 
 document.addEventListener('touchstart', (e) => {
-    if (isInteractive(e.target)) return;
-    if (e.target.closest('.screen-scroll')) return;
+    if (isInteractive(e.target) || e.target.closest('.screen-scroll')) return;
     touchStartY = e.touches[0].clientY;
     touchStartX = e.touches[0].clientX;
 }, { passive: true });
 
 document.addEventListener('touchend', (e) => {
-    if (isInteractive(e.target)) return;
-    if (e.target.closest('.screen-scroll')) return;
+    if (isInteractive(e.target) || e.target.closest('.screen-scroll')) return;
     const t = e.changedTouches[0];
     const dy = touchStartY - t.clientY;
     const dx = touchStartX - t.clientX;
@@ -1678,7 +1825,7 @@ document.addEventListener('touchend', (e) => {
 // ============================================
 // INIT
 // ============================================
-console.log(`%c💝 Сделано с любовью для ${girlName}`, 'font-size:16px; color:#ff4d6d;');
+console.log(`%c💝 Сделано с любовью для ${girlName}`, 'font-size:16px; color:#e8456b;');
 </script>
 
 </body>
