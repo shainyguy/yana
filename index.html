@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Для тебя моя дорогая Яночка ❤️</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --accent: #ff4d6d;
+            --accent-glow: rgba(255, 77, 109, 0.4);
+            --accent-soft: rgba(255, 77, 109, 0.15);
+            --text-primary: #f0e6ef;
+            --text-secondary: rgba(240, 230, 239, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg-strong: rgba(255, 255, 255, 0.1);
+            --gold: #ffd700;
+            --gold-glow: rgba(255, 215, 0, 0.3);
+            --success: #4ade80;
+            --transition-smooth: 700ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            line-height: 1.6;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ============ PARTICLE CANVAS ============ */
+        #particleCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============ SCREEN SYSTEM ============ */
+        .screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%; height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 1;
+            opacity: 0;
+            filter: blur(8px);
+            transform: translateY(20px);
+            transition: opacity var(--transition-smooth),
+                        filter var(--transition-smooth),
+                        transform var(--transition-smooth);
+            pointer-events: none;
+            will-change: opacity, filter, transform;
+        }
+
+        .screen.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .screen.leaving {
+            opacity: 0;
+            filter: blur(8px);
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        .screen-scroll {
+            overflow-y: auto;
+            justify-content: flex-start;
+            padding-top: 48px;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen-scroll::-webkit-scrollbar { display: none; }
+
+        /* ============ TYPOGRAPHY ============ */
+        .title {
+            font-size: clamp(26px, 7vw, 44px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 3.8vw, 18px);
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 28px;
+            max-width: 320px;
+        }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            min-height: 52px;
+            min-width: 48px;
+            padding: 14px 36px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+
+        .btn:active { transform: scale(0.96); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #e0245e);
+            color: #fff;
+            box-shadow: 0 4px 24px var(--accent-glow);
+        }
+
+        .btn-glass {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .btn-small {
+            min-height: 44px;
+            padding: 10px 24px;
+            font-size: 14px;
+            border-radius: 12px;
+        }
+
+        .btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* ============ GLASS CARD ============ */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 28px 22px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ============ PHOTO ============ */
+        .photo-container {
+            width: clamp(180px, 55vw, 260px);
+            height: clamp(180px, 55vw, 260px);
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-glow);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .photo-placeholder {
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-soft), var(--bg-secondary));
+            font-size: 56px;
+        }
+
+        /* ============ REVEAL ============ */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-item:nth-child(2) { transition-delay: 0.12s; }
+        .reveal-item:nth-child(3) { transition-delay: 0.24s; }
+        .reveal-item:nth-child(4) { transition-delay: 0.36s; }
+        .reveal-item:nth-child(5) { transition-delay: 0.48s; }
+        .reveal-item:nth-child(6) { transition-delay: 0.60s; }
+        .reveal-item:nth-child(7) { transition-delay: 0.72s; }
+
+        /* ============ HEARTBEAT ============ */
+        .heartbeat {
+            animation: heartbeat 1.2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.12); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.12); }
+            56% { transform: scale(1); }
+        }
+
+        /* ============ TIMELINE ============ */
+        .timeline {
+            width: 100%; max-width: 340px;
+            display: flex; flex-direction: column; gap: 20px;
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex; gap: 14px; align-items: flex-start;
+        }
+
+        .timeline-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 5px; flex-shrink: 0;
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .timeline-content h3 {
+            font-size: 15px; font-weight: 600; margin-bottom: 4px;
+        }
+
+        .timeline-content p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+        }
+
+        /* ============ GALLERY ============ */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%; max-width: 340px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .gallery-placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--accent-soft), var(--bg-secondary));
+        }
+
+        /* ============ TRAITS ============ */
+        .traits {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center;
+            max-width: 340px; margin-top: 14px;
+        }
+
+        .trait-tag {
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            font-size: 14px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* ============ RIDDLE (Screen 4) ============ */
+        .riddle-box {
+            width: 100%; max-width: 340px;
+            text-align: center;
+        }
+
+        .riddle-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .riddle-options {
+            display: flex; flex-direction: column;
+            gap: 10px; width: 100%;
+        }
+
+        .riddle-option {
+            padding: 14px 20px;
+            background: var(--glass-bg);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 15px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            min-height: 48px;
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .riddle-option:active {
+            transform: scale(0.97);
+        }
+
+        .riddle-option.correct {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.15);
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+        }
+
+        .riddle-option.wrong {
+            border-color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .riddle-result {
+            margin-top: 20px;
+            font-size: 16px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .riddle-result.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .riddle-emoji {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* ============ PUZZLE GAME (Screen 5) ============ */
+        .puzzle-container {
+            width: 100%; max-width: 320px;
+            text-align: center;
+        }
+
+        .puzzle-instruction {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            width: min(280px, 80vw);
+            height: min(280px, 80vw);
+            margin: 0 auto;
+            perspective: 600px;
+        }
+
+        .puzzle-cell {
+            background: var(--glass-bg);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(24px, 8vw, 36px);
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            aspect-ratio: 1;
+            will-change: transform;
+            position: relative;
+        }
+
+        .puzzle-cell:active {
+            transform: scale(0.92);
+        }
+
+        .puzzle-cell.flipped {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            animation: flipIn 0.4s ease;
+        }
+
+        @keyframes flipIn {
+            0% { transform: rotateY(90deg) scale(0.8); }
+            100% { transform: rotateY(0deg) scale(1); }
+        }
+
+        .puzzle-cell.matched {
+            background: rgba(74, 222, 128, 0.12);
+            border-color: var(--success);
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.2);
+        }
+
+        .puzzle-cell .cell-back {
+            font-size: clamp(18px, 5vw, 24px);
+            color: var(--text-secondary);
+        }
+
+        .puzzle-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .puzzle-stats span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .puzzle-complete {
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .puzzle-complete.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .puzzle-complete .complete-emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .puzzle-complete .complete-text {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        /* ============ OVERLAYS ============ */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .overlay-card {
+            position: relative;
+            z-index: 1;
+            background: var(--glass-bg-strong);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 36px 26px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        opacity 0.5s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .overlay.visible .overlay-card {
+            transform: scale(1);
+            opacity: 1;
+            transition-delay: 0.2s;
+        }
+
+        .overlay-card .overlay-emoji {
+            font-size: 48px; margin-bottom: 14px; display: block;
+        }
+
+        .overlay-card .overlay-text {
+            font-size: 17px; line-height: 1.7; color: var(--text-primary);
+        }
+
+        .overlay-card .overlay-close {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .overlay-card .signature {
+            font-size: 16px;
+            color: var(--accent);
+            font-style: italic;
+            margin-top: 14px;
+        }
+
+        /* ============ HOLD AREA ============ */
+        .hold-area {
+            position: relative;
+            width: 110px; height: 110px;
+            margin: 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .hold-glow {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .hold-area.holding .hold-glow {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        .hold-ring {
+            position: absolute;
+            width: 85px; height: 85px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hold-ring svg {
+            width: 100%; height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .hold-ring svg circle {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 2;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .hold-icon {
+            font-size: 30px;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* ============ HINTS ============ */
+        .hint-bar {
+            position: fixed;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 280px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+
+        .hint-bar.visible { opacity: 1; }
+
+        /* ============ FINAL BADGE ============ */
+        #finalBadge {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 90;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+            max-width: 280px;
+        }
+
+        #finalBadge.visible { opacity: 1; }
+
+        /* ============ DRAW TRAIL ============ */
+        .draw-trail {
+            position: fixed;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 3;
+            transform: translate(-50%, -50%);
+            animation: trailFade 1s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            to { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+        }
+
+        /* ============ NAV DOTS ============ */
+        .nav-dots {
+            position: fixed;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        /* ============ PROGRESS STARS ============ */
+        .progress-bar {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .progress-bar.visible { opacity: 1; }
+
+        .progress-star {
+            font-size: 18px;
+            opacity: 0.3;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.8);
+        }
+
+        .progress-star.earned {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 6px var(--gold-glow));
+        }
+
+        /* ============ CONFETTI ============ */
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            z-index: 200;
+            pointer-events: none;
+            border-radius: 2px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg) scale(0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+
+<!-- PROGRESS STARS -->
+<div class="progress-bar" id="progressBar">
+    <span class="progress-star" id="star1" title="Загадка">⭐</span>
+    <span class="progress-star" id="star2" title="Игра">⭐</span>
+    <span class="progress-star" id="star3" title="Секрет сердца">⭐</span>
+    <span class="progress-star" id="star4" title="Секрет терпения">⭐</span>
+</div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- ============ SCREEN 1 — WELCOME ============ -->
+<div class="screen active" id="screen1">
+    <div class="reveal-item">
+        <div class="photo-container">
+            <!-- ЗАМЕНИТЬ: <img src="photo.jpg" alt="" loading="lazy"> -->
+            <img src="https://sun9-35.userapi.com/s/v1/ig2/0k59zA5qvVDrEi01X1GlttTEjRi905PWxKOjm-AYKrcvFfMVHIAqxs_COgSmLPGeGGd6l93AlHXrXpHpMKYLze_n.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&cs=1920x0" alt="" loading="lazy">
+        </div>
+    </div>
+    <h1 class="title reveal-item" id="welcomeTitle"></h1>
+    <p class="subtitle reveal-item" id="welcomeSubtitle"></p>
+    <button class="btn btn-primary reveal-item" onclick="goToScreen(2)">Начать ❤️</button>
+</div>
+
+<!-- ============ SCREEN 2 — TIMELINE ============ -->
+<div class="screen screen-scroll" id="screen2">
+    <h1 class="title reveal-item">Наша история</h1>
+    <p class="subtitle reveal-item" id="storySubtitle"></p>
+    <div class="timeline">
+        <!-- ЗАМЕНИТЬ: тексты на ваши реальные моменты -->
+        <div class="timeline-item reveal-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <h3>Первая встреча ✨</h3>
+                <p>Тот самый момент, когда всё началось…</p>
+            </div>
+        </div>
+        <div class="timeline-item reveal-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <h3>Первый смех вместе 😄</h3>
+                <p>Когда я понял, что ты — особенная.</p>
+            </div>
+        </div>
+        <div class="timeline-item reveal-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <h3>Первое «скучаю» 💭</h3>
+                <p>Расстояние только подтвердило чувства.</p>
+            </div>
+        </div>
+        <div class="timeline-item reveal-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <h3>Сейчас 💝</h3>
+                <p id="timelineNow"></p>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-glass reveal-item" style="margin-top:28px;" onclick="goToScreen(3)">Дальше →</button>
+</div>
+
+<!-- ============ SCREEN 3 — GALLERY ============ -->
+<div class="screen screen-scroll" id="screen3">
+    <h1 class="title reveal-item">Моменты</h1>
+    <p class="subtitle reveal-item">Каждый из них — бесценен</p>
+    <div class="gallery-grid">
+        <!-- ЗАМЕНИТЬ: добавить свои фото -->
+        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌅</div></div>
+        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌙</div></div>
+        <div class="gallery-item reveal-item"><div class="gallery-placeholder">☀️</div></div>
+        <div class="gallery-item reveal-item"><div class="gallery-placeholder">🌸</div></div>
+    </div>
+    <button class="btn btn-glass reveal-item" style="margin-top:28px;" onclick="goToScreen(4)">Дальше →</button>
+</div>
+
+<!-- ============ SCREEN 4 — RIDDLE / ЗАГАДКА ============ -->
+<div class="screen" id="screen4">
+    <h1 class="title reveal-item">Загадка 🔮</h1>
+    <p class="subtitle reveal-item" id="riddleIntro"></p>
+
+    <div class="riddle-box glass-card reveal-item" id="riddleBox">
+        <p class="riddle-text" id="riddleText"></p>
+        <div class="riddle-options" id="riddleOptions">
+            <!-- Заполняется из JS -->
+        </div>
+        <div class="riddle-result" id="riddleResult">
+            <span class="riddle-emoji" id="riddleEmoji"></span>
+            <p id="riddleResultText"></p>
+        </div>
+    </div>
+
+    <button class="btn btn-glass reveal-item" style="margin-top:24px; opacity:0; pointer-events:none;" id="riddleNextBtn" onclick="goToScreen(5)">
+        К следующему испытанию →
+    </button>
+</div>
+
+<!-- ============ SCREEN 5 — MEMORY GAME / ИГРА ============ -->
+<div class="screen" id="screen5">
+    <h1 class="title reveal-item">Найди пару 💫</h1>
+    <p class="subtitle reveal-item" id="gameIntro"></p>
+
+    <div class="puzzle-container reveal-item">
+        <p class="puzzle-instruction">Переверни карточки и найди все пары</p>
+        <div class="puzzle-grid" id="puzzleGrid">
+            <!-- Заполняется из JS -->
+        </div>
+        <div class="puzzle-stats">
+            <div>Ходы: <span id="moveCount">0</span></div>
+            <div>Пары: <span id="pairCount">0</span>/4</div>
+        </div>
+        <div class="puzzle-complete" id="puzzleComplete">
+            <span class="complete-emoji">🎉</span>
+            <p class="complete-text" id="puzzleCompleteText"></p>
+            <button class="btn btn-primary btn-small" onclick="goToScreen(6)">Продолжить →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ SCREEN 6 — TRAITS ============ -->
+<div class="screen" id="screen6">
+    <h1 class="title reveal-item" id="traitsTitle"></h1>
+    <p class="subtitle reveal-item">За что я тебя обожаю:</p>
+    <div class="traits">
+        <!-- ЗАМЕНИТЬ: свои качества -->
+        <span class="trait-tag reveal-item">Твои глаза ✨</span>
+        <span class="trait-tag reveal-item">Твой смех 😊</span>
+        <span class="trait-tag reveal-item">Твоя нежность 🌸</span>
+        <span class="trait-tag reveal-item">Твоя сила 💪</span>
+        <span class="trait-tag reveal-item">Твоя доброта 💛</span>
+        <span class="trait-tag reveal-item">Всё в тебе 💝</span>
+    </div>
+    <button class="btn btn-primary reveal-item" style="margin-top:32px;" onclick="goToScreen(7)">Открыть финал 🔒</button>
+</div>
+
+<!-- ============ SCREEN 7 — FINAL + SECRET #2 ============ -->
+<div class="screen" id="screen7">
+    <h1 class="title reveal-item" id="finalTitle"></h1>
+    <p class="subtitle reveal-item" id="finalSubtitle"></p>
+    <div class="glass-card reveal-item">
+        <p style="font-size:15px; line-height:1.8;" id="finalMessage"></p>
+    </div>
+    <!-- SECRET #2: HOLD 3s -->
+    <div class="hold-area reveal-item" id="holdArea">
+        <div class="hold-glow"></div>
+        <div class="hold-ring">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" id="holdCircle"/></svg>
+        </div>
+        <span class="hold-icon">✨</span>
+    </div>
+    <p class="reveal-item" style="font-size:12px; color:var(--text-secondary); margin-top:2px;">
+        Здесь скрыто кое-что особенное
+    </p>
+</div>
+
+<!-- ============ SECRET #1 OVERLAY ============ -->
+<div class="overlay" id="secretOverlay">
+    <div class="overlay-bg" onclick="closeOverlay('secretOverlay')"></div>
+    <div class="overlay-card">
+        <span class="overlay-emoji heartbeat">❤️</span>
+        <p class="overlay-text" id="secret1Text"></p>
+        <div class="overlay-close" onclick="closeOverlay('secretOverlay')">Коснись, чтобы закрыть</div>
+    </div>
+</div>
+
+<!-- ============ SECRET #2 OVERLAY ============ -->
+<div class="overlay" id="holdOverlay">
+    <div class="overlay-bg" onclick="closeOverlay('holdOverlay')"></div>
+    <div class="overlay-card">
+        <p class="overlay-text">Ты умеешь ждать.</p>
+        <p class="overlay-text">И я ждал именно тебя.</p>
+        <p class="signature" id="holdSignature"></p>
+        <div class="overlay-close" onclick="closeOverlay('holdOverlay')">Коснись, чтобы закрыть</div>
+    </div>
+</div>
+
+<!-- HINTS -->
+<div class="hint-bar" id="gestureHint">Иногда достаточно нарисовать то, что чувствуешь… ❤️</div>
+<div class="hint-bar" id="holdHint"></div>
+
+<!-- FINAL BADGE -->
+<div id="finalBadge"></div>
+
+<!-- AUDIO -->
+<!-- ЗАМЕНИТЬ: src на heartbeat.mp3 -->
+<audio id="heartbeatAudio" preload="auto">
+    <!-- <source src="heartbeat.mp3" type="audio/mpeg"> -->
+</audio>
+
+<script>
+// ============================================
+// ПЕРСОНАЛИЗАЦИЯ — ИЗМЕНИТЕ ИМЕНА ЗДЕСЬ
+// ============================================
+const girlName = "Яна";
+const boyName = "Кирилл";
+
+// ============================================
+// DYNAMIC TEXTS
+// ============================================
+document.getElementById('welcomeTitle').textContent = `Для тебя, ${girlName}`;
+document.getElementById('welcomeSubtitle').textContent = `${boyName} приготовил кое-что особенное…`;
+document.getElementById('storySubtitle').textContent = `${girlName}, помнишь?`;
+document.getElementById('timelineNow').textContent = `Каждый день с тобой — подарок, ${girlName}.`;
+document.getElementById('riddleIntro').textContent = `${girlName}, проверим, насколько мы близки?`;
+document.getElementById('gameIntro').textContent = `Маленькая игра от ${boyName}а`;
+document.getElementById('traitsTitle').textContent = `Почему ты, ${girlName}?`;
+document.getElementById('finalTitle').textContent = `${girlName}…`;
+document.getElementById('finalSubtitle').textContent = `У ${boyName}а есть слова для тебя`;
+document.getElementById('finalMessage').innerHTML =
+    `${girlName}, ты — лучшее, что случилось в моей жизни. ` +
+    `Каждый день рядом с тобой наполнен смыслом и теплом. ` +
+    `Спасибо, что ты есть. ❤️<br><br>— ${boyName}`;
+document.getElementById('secret1Text').innerHTML =
+    `Ты нашла секрет, ${girlName} ❤️<br>${boyName} приготовил для тебя сюрприз…`;
+document.getElementById('holdSignature').textContent = `— ${boyName}`;
+document.getElementById('finalBadge').innerHTML =
+    `Ты нашла всё.<br>И это только начало, ${girlName} ❤️`;
+
+// ============================================
+// STATE
+// ============================================
+const totalScreens = 7;
+let currentScreen = 1;
+let secret1Found = false;
+let secret2Found = false;
+let riddleSolved = false;
+let gameSolved = false;
+let idleTimer = null;
+let wrongGestureCount = 0;
+let holdHintTimer = null;
+let particleBoostUntil = 0;
+
+// ============================================
+// NAV DOTS
+// ============================================
+const navDotsContainer = document.getElementById('navDots');
+for (let i = 1; i <= totalScreens; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 1 ? ' active' : '');
+    dot.dataset.screen = i;
+    dot.addEventListener('click', () => goToScreen(i));
+    navDotsContainer.appendChild(dot);
+}
+
+function updateNavDots() {
+    document.querySelectorAll('.nav-dot').forEach(d => {
+        d.classList.toggle('active', parseInt(d.dataset.screen) === currentScreen);
+    });
+}
+
+// ============================================
+// PROGRESS STARS
+// ============================================
+function earnStar(num) {
+    const star = document.getElementById(`star${num}`);
+    if (star && !star.classList.contains('earned')) {
+        star.classList.add('earned');
+        if (navigator.vibrate) navigator.vibrate(50);
+    }
+}
+
+// Show progress bar after screen 1
+function updateProgressVisibility() {
+    const bar = document.getElementById('progressBar');
+    bar.classList.toggle('visible', currentScreen > 1);
+}
+
+// ============================================
+// SCREEN TRANSITIONS
+// ============================================
+function goToScreen(num) {
+    if (num === currentScreen || num < 1 || num > totalScreens) return;
+
+    const currentEl = document.getElementById(`screen${currentScreen}`);
+    const nextEl = document.getElementById(`screen${num}`);
+
+    currentEl.classList.remove('active');
+    currentEl.classList.add('leaving');
+    setTimeout(() => currentEl.classList.remove('leaving'), 700);
+
+    setTimeout(() => {
+        nextEl.classList.add('active');
+        currentScreen = num;
+        updateNavDots();
+        updateProgressVisibility();
+        triggerRevealItems(nextEl);
+        resetIdleTimer();
+
+        if (num === 5 && !gameSolved) initPuzzleGame();
+        if (num === 7 && !secret2Found) startHoldHintTimer();
+    }, 100);
+}
+
+// ============================================
+// REVEAL
+// ============================================
+function triggerRevealItems(container) {
+    const items = container.querySelectorAll('.reveal-item');
+    items.forEach((item, i) => {
+        item.classList.remove('visible');
+        setTimeout(() => item.classList.add('visible'), 80 + i * 100);
+    });
+}
+
+setTimeout(() => triggerRevealItems(document.getElementById('screen1')), 300);
+
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.screen-scroll .reveal-item').forEach(item => {
+    revealObserver.observe(item);
+});
+
+// ============================================
+// BUTTON RIPPLE
+// ============================================
+document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('touchstart', function(e) {
+        const rect = this.getBoundingClientRect();
+        const touch = e.touches[0];
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (touch.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (touch.clientY - rect.top - size / 2) + 'px';
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    }, { passive: true });
+});
+
+// ============================================
+// PARTICLE SYSTEM
+// ============================================
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor(boosted = false) { this.reset(boosted); }
+
+    reset(boosted = false) {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * (boosted ? 4 : 2.5) + 0.5;
+        this.speedX = (Math.random() - 0.5) * (boosted ? 1.5 : 0.5);
+        this.speedY = (Math.random() - 0.5) * (boosted ? 1.5 : 0.5) - 0.3;
+        this.opacity = Math.random() * 0.5 + (boosted ? 0.3 : 0.1);
+        this.life = Math.random() * 200 + 100;
+        this.maxLife = this.life;
+        const hue = 345 + Math.random() * 20 - 10;
+        this.color = `hsla(${hue}, 100%, 70%, `;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        if (this.life <= 0 || this.x < -10 || this.x > canvas.width + 10 ||
+            this.y < -10 || this.y > canvas.height + 10) {
+            this.reset(performance.now() < particleBoostUntil);
+        }
+    }
+
+    draw() {
+        const alpha = this.opacity * Math.min(this.life / this.maxLife, 1);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color + alpha + ')';
+        ctx.fill();
+    }
+}
+
+const PARTICLE_COUNT = Math.min(50, Math.floor(window.innerWidth * window.innerHeight / 18000));
+for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const isBoosted = performance.now() < particleBoostUntil;
+    if (isBoosted && particles.length < PARTICLE_COUNT * 3) {
+        for (let i = 0; i < 3; i++) particles.push(new Particle(true));
+    }
+    if (!isBoosted && particles.length > PARTICLE_COUNT) particles.splice(PARTICLE_COUNT);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+requestAnimationFrame(animateParticles);
+
+function boostParticles(ms = 3000) { particleBoostUntil = performance.now() + ms; }
+
+// ============================================
+// CONFETTI
+// ============================================
+function launchConfetti(count = 40) {
+    const colors = ['#ff4d6d', '#ffd700', '#4ade80', '#60a5fa', '#f472b6', '#fbbf24'];
+    for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.top = '-10px';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = (Math.random() * 8 + 4) + 'px';
+        piece.style.height = (Math.random() * 8 + 4) + 'px';
+        piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+        piece.style.animationDelay = (Math.random() * 0.8) + 's';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+    }
+}
+
+// ============================================
+// RIDDLE (Screen 4) — ЗАГАДКА
+// ============================================
+// ЗАМЕНИТЬ: измените загадку и варианты на свои
+const riddle = {
+    question: `Что ${boyName} заметил первым при встрече с ${girlName}?`,
+    options: [
+        { text: "🌟 Улыбку", correct: false },
+        { text: "✨ Глаза", correct: true },   // ЗАМЕНИТЬ: правильный ответ
+        { text: "🎵 Голос", correct: false },
+        { text: "💫 Смех", correct: false }
+    ],
+    correctMsg: `Именно! Твои глаза — первое, что покорило ${boyName}а ✨`,
+    wrongMsg: `Не совсем… но ${boyName} обожает в тебе всё 💕`
+};
+
+function initRiddle() {
+    document.getElementById('riddleText').textContent = riddle.question;
+    const container = document.getElementById('riddleOptions');
+    container.innerHTML = '';
+
+    // Shuffle options
+    const shuffled = [...riddle.options].sort(() => Math.random() - 0.5);
+
+    shuffled.forEach((opt, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'riddle-option';
+        btn.innerHTML = `<span>${opt.text}</span>`;
+        btn.addEventListener('click', () => handleRiddleAnswer(btn, opt.correct));
+        container.appendChild(btn);
+    });
+}
+
+function handleRiddleAnswer(el, isCorrect) {
+    if (riddleSolved) return;
+
+    const allOptions = document.querySelectorAll('.riddle-option');
+    allOptions.forEach(o => o.style.pointerEvents = 'none');
+
+    if (isCorrect) {
+        riddleSolved = true;
+        el.classList.add('correct');
+
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        boostParticles(2000);
+        launchConfetti(25);
+        earnStar(1);
+
+        document.getElementById('riddleEmoji').textContent = '🎉';
+        document.getElementById('riddleResultText').textContent = riddle.correctMsg;
+
+        // Show next button
+        setTimeout(() => {
+            const nextBtn = document.getElementById('riddleNextBtn');
+            nextBtn.style.opacity = '1';
+            nextBtn.style.pointerEvents = 'auto';
+        }, 800);
+    } else {
+        el.classList.add('wrong');
+        document.getElementById('riddleEmoji').textContent = '💕';
+        document.getElementById('riddleResultText').textContent = riddle.wrongMsg;
+
+        // Allow retry after delay
+        setTimeout(() => {
+            el.classList.remove('wrong');
+            allOptions.forEach(o => o.style.pointerEvents = 'auto');
+        }, 1200);
+    }
+
+    const result = document.getElementById('riddleResult');
+    result.classList.add('visible');
+    setTimeout(() => {
+        if (!isCorrect) result.classList.remove('visible');
+    }, 2000);
+
+    checkAllSecrets();
+}
+
+initRiddle();
+
+// ============================================
+// MEMORY GAME (Screen 5) — ИГРА
+// ============================================
+// ЗАМЕНИТЬ: эмодзи пар на свои
+const puzzleEmojis = ['❤️', '💋', '🌹', '✨'];
+let puzzleCards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+let moveCount = 0;
+let puzzleLocked = false;
+
+function initPuzzleGame() {
+    if (gameSolved) return;
+
+    matchedPairs = 0;
+    moveCount = 0;
+    flippedCards = [];
+    puzzleLocked = false;
+    document.getElementById('moveCount').textContent = '0';
+    document.getElementById('pairCount').textContent = '0';
+    document.getElementById('puzzleComplete').classList.remove('visible');
+
+    // Create pairs and shuffle
+    puzzleCards = [...puzzleEmojis, ...puzzleEmojis]
+        .map((emoji, i) => ({ emoji, id: i }))
+        .sort(() => Math.random() - 0.5);
+
+    // Add one extra cell to make 9 (3x3) — center is decorative
+    const grid = document.getElementById('puzzleGrid');
+    grid.innerHTML = '';
+
+    let cardIndex = 0;
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'puzzle-cell';
+
+        if (i === 4) {
+            // Center cell is decorative
+            cell.innerHTML = '💝';
+            cell.style.background = 'var(--accent-soft)';
+            cell.style.border = '1.5px solid var(--accent)';
+            cell.style.cursor = 'default';
+            cell.dataset.decorative = 'true';
+        } else {
+            const card = puzzleCards[cardIndex];
+            cell.dataset.emoji = card.emoji;
+            cell.dataset.cardId = card.id;
+            cell.innerHTML = `<span class="cell-back">?</span>`;
+            cell.addEventListener('click', () => flipCard(cell));
+            cardIndex++;
+        }
+
+        grid.appendChild(cell);
+    }
+}
+
+function flipCard(cell) {
+    if (puzzleLocked) return;
+    if (cell.classList.contains('flipped') || cell.classList.contains('matched')) return;
+    if (cell.dataset.decorative) return;
+
+    cell.classList.add('flipped');
+    cell.innerHTML = cell.dataset.emoji;
+    flippedCards.push(cell);
+
+    if (navigator.vibrate) navigator.vibrate(20);
+
+    if (flippedCards.length === 2) {
+        moveCount++;
+        document.getElementById('moveCount').textContent = moveCount;
+        puzzleLocked = true;
+
+        const [a, b] = flippedCards;
+
+        if (a.dataset.emoji === b.dataset.emoji) {
+            // Match!
+            setTimeout(() => {
+                a.classList.add('matched');
+                b.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('pairCount').textContent = matchedPairs;
+
+                if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+
+                if (matchedPairs === puzzleEmojis.length) {
+                    onPuzzleComplete();
+                }
+
+                flippedCards = [];
+                puzzleLocked = false;
+            }, 400);
+        } else {
+            // No match
+            setTimeout(() => {
+                a.classList.remove('flipped');
+                b.classList.remove('flipped');
+                a.innerHTML = `<span class="cell-back">?</span>`;
+                b.innerHTML = `<span class="cell-back">?</span>`;
+                flippedCards = [];
+                puzzleLocked = false;
+            }, 800);
+        }
+    }
+}
+
+function onPuzzleComplete() {
+    gameSolved = true;
+    earnStar(2);
+    boostParticles(2500);
+    launchConfetti(35);
+
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 100]);
+
+    document.getElementById('puzzleCompleteText').innerHTML =
+        `Отлично, ${girlName}! 🎉<br>Ты справилась за <strong>${moveCount}</strong> ходов!<br>` +
+        `${boyName} гордится тобой 💕`;
+
+    setTimeout(() => {
+        document.getElementById('puzzleComplete').classList.add('visible');
+    }, 500);
+
+    checkAllSecrets();
+}
+
+// ============================================
+// SECRET #1 — HEART GESTURE
+// ============================================
+let drawPoints = [];
+let isDrawing = false;
+let trailElements = [];
+
+function isInteractive(el) {
+    return el.closest('.btn, .hold-area, .overlay.visible, .nav-dot, .riddle-option, .puzzle-cell, .overlay-close');
+}
+
+document.addEventListener('touchstart', (e) => {
+    if (secret1Found || isInteractive(e.target)) return;
+    isDrawing = true;
+    drawPoints = [];
+    const t = e.touches[0];
+    drawPoints.push({ x: t.clientX, y: t.clientY });
+    addTrailDot(t.clientX, t.clientY);
+    resetIdleTimer();
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+    if (!isDrawing || secret1Found) return;
+    const t = e.touches[0];
+    drawPoints.push({ x: t.clientX, y: t.clientY });
+    addTrailDot(t.clientX, t.clientY);
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+    if (!isDrawing || secret1Found) return;
+    isDrawing = false;
+    if (drawPoints.length > 30 && recognizeHeart(drawPoints)) {
+        triggerSecret1();
+    } else if (drawPoints.length > 20) {
+        wrongGestureCount++;
+        checkGestureHint();
+    }
+    drawPoints = [];
+    clearTrails();
+});
+
+// Mouse fallback
+document.addEventListener('mousedown', (e) => {
+    if (secret1Found || isInteractive(e.target)) return;
+    isDrawing = true;
+    drawPoints = [{ x: e.clientX, y: e.clientY }];
+    addTrailDot(e.clientX, e.clientY);
+    resetIdleTimer();
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDrawing || secret1Found) return;
+    drawPoints.push({ x: e.clientX, y: e.clientY });
+    addTrailDot(e.clientX, e.clientY);
+});
+
+document.addEventListener('mouseup', () => {
+    if (!isDrawing || secret1Found) return;
+    isDrawing = false;
+    if (drawPoints.length > 30 && recognizeHeart(drawPoints)) {
+        triggerSecret1();
+    } else if (drawPoints.length > 20) {
+        wrongGestureCount++;
+        checkGestureHint();
+    }
+    drawPoints = [];
+    clearTrails();
+});
+
+function addTrailDot(x, y) {
+    if (secret1Found) return;
+    const dot = document.createElement('div');
+    dot.className = 'draw-trail';
+    dot.style.left = x + 'px';
+    dot.style.top = y + 'px';
+    document.body.appendChild(dot);
+    trailElements.push(dot);
+    setTimeout(() => dot.remove(), 1000);
+}
+
+function clearTrails() {
+    setTimeout(() => {
+        trailElements.forEach(t => t.remove());
+        trailElements = [];
+    }, 1200);
+}
+
+// ============================================
+// HEART RECOGNITION
+// ============================================
+function recognizeHeart(points) {
+    if (points.length < 30) return false;
+
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    points.forEach(p => {
+        minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+    });
+
+    const w = maxX - minX, h = maxY - minY;
+    if (w < 50 || h < 50) return false;
+
+    const aspect = w / h;
+    if (aspect < 0.5 || aspect > 1.8) return false;
+
+    const norm = points.map(p => ({
+        x: (p.x - minX) / w,
+        y: (p.y - minY) / h
+    }));
+
+    // Bottom point near center
+    let lowestY = -1, lowestPoint = null;
+    norm.forEach(p => {
+        if (p.y > lowestY) { lowestY = p.y; lowestPoint = p; }
+    });
+    if (!lowestPoint || lowestPoint.x < 0.2 || lowestPoint.x > 0.8 || lowestPoint.y < 0.65) return false;
+
+    // Top has points on both sides
+    const topPoints = norm.filter(p => p.y < 0.4);
+    if (topPoints.length < 4) return false;
+    const topLeft = topPoints.filter(p => p.x < 0.4);
+    const topRight = topPoints.filter(p => p.x > 0.6);
+    if (topLeft.length < 2 || topRight.length < 2) return false;
+
+    // Path crosses center
+    let crossings = 0;
+    for (let i = 1; i < norm.length; i++) {
+        if ((norm[i].x >= 0.5) !== (norm[i - 1].x >= 0.5)) crossings++;
+    }
+    if (crossings < 2) return false;
+
+    // Closed-ish shape
+    const start = points[0], end = points[points.length - 1];
+    if (Math.hypot(start.x - end.x, start.y - end.y) > Math.max(w, h) * 0.5) return false;
+
+    return true;
+}
+
+function triggerSecret1() {
+    if (secret1Found) return;
+    secret1Found = true;
+
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+
+    const audio = document.getElementById('heartbeatAudio');
+    if (audio.src || audio.querySelector('source')) audio.play().catch(() => {});
+
+    document.getElementById('secretOverlay').classList.add('visible');
+    boostParticles(3000);
+    launchConfetti(30);
+    earnStar(3);
+
+    document.getElementById('gestureHint').classList.remove('visible');
+    checkAllSecrets();
+}
+
+// ============================================
+// GESTURE HINT
+// ============================================
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    if (!secret1Found) {
+        idleTimer = setTimeout(showGestureHint, 20000);
+    }
+}
+
+function checkGestureHint() {
+    if (wrongGestureCount >= 3 && !secret1Found) showGestureHint();
+}
+
+function showGestureHint() {
+    if (secret1Found) return;
+    const hint = document.getElementById('gestureHint');
+    hint.classList.add('visible');
+    setTimeout(() => hint.classList.remove('visible'), 5000);
+}
+
+resetIdleTimer();
+
+// ============================================
+// SECRET #2 — HOLD 3 SECONDS
+// ============================================
+const holdArea = document.getElementById('holdArea');
+const holdCircle = document.getElementById('holdCircle');
+let holdStartTime = null;
+let holdAnimFrame = null;
+let isHolding = false;
+const HOLD_DURATION = 3000;
+
+holdArea.addEventListener('touchstart', startHold, { passive: true });
+holdArea.addEventListener('touchend', endHold);
+holdArea.addEventListener('touchcancel', endHold);
+holdArea.addEventListener('mousedown', startHold);
+holdArea.addEventListener('mouseup', endHold);
+holdArea.addEventListener('mouseleave', endHold);
+
+function startHold() {
+    if (secret2Found) return;
+    isHolding = true;
+    holdStartTime = performance.now();
+    holdArea.classList.add('holding');
+    animateHoldRing();
+}
+
+function endHold() {
+    if (secret2Found) return;
+    if (isHolding && holdStartTime) {
+        const elapsed = performance.now() - holdStartTime;
+        if (elapsed < HOLD_DURATION) {
+            showHoldHint('Почти… попробуй чуть дольше ❤️');
+        }
+    }
+    isHolding = false;
+    holdStartTime = null;
+    holdArea.classList.remove('holding');
+    cancelAnimationFrame(holdAnimFrame);
+    holdCircle.style.strokeDashoffset = '283';
+}
+
+function animateHoldRing() {
+    if (!isHolding || secret2Found) return;
+    const elapsed = performance.now() - holdStartTime;
+    const progress = Math.min(elapsed / HOLD_DURATION, 1);
+    holdCircle.style.strokeDashoffset = 283 * (1 - progress);
+
+    if (progress >= 1) {
+        triggerSecret2();
+        return;
+    }
+    holdAnimFrame = requestAnimationFrame(animateHoldRing);
+}
+
+function triggerSecret2() {
+    if (secret2Found) return;
+    secret2Found = true;
+    isHolding = false;
+    holdArea.classList.remove('holding');
+
+    if (navigator.vibrate) navigator.vibrate(100);
+    document.getElementById('holdOverlay').classList.add('visible');
+    boostParticles(2000);
+    earnStar(4);
+
+    document.getElementById('holdHint').classList.remove('visible');
+    checkAllSecrets();
+}
+
+function startHoldHintTimer() {
+    clearTimeout(holdHintTimer);
+    holdHintTimer = setTimeout(() => {
+        if (!secret2Found) showHoldHint('Иногда секреты открываются тем, кто не спешит…');
+    }, 10000);
+}
+
+function showHoldHint(text) {
+    const hint = document.getElementById('holdHint');
+    hint.textContent = text;
+    hint.classList.add('visible');
+    setTimeout(() => hint.classList.remove('visible'), 4000);
+}
+
+// ============================================
+// OVERLAY CLOSE
+// ============================================
+function closeOverlay(id) {
+    document.getElementById(id).classList.remove('visible');
+}
+
+// ============================================
+// CHECK ALL COMPLETE
+// ============================================
+function checkAllSecrets() {
+    if (riddleSolved && gameSolved && secret1Found && secret2Found) {
+        setTimeout(() => {
+            document.getElementById('finalBadge').classList.add('visible');
+            launchConfetti(60);
+            boostParticles(4000);
+        }, 2000);
+    }
+}
+
+// ============================================
+// SWIPE NAVIGATION (non-scroll screens)
+// ============================================
+let touchStartY = 0, touchStartX = 0;
+
+document.addEventListener('touchstart', (e) => {
+    if (isInteractive(e.target)) return;
+    if (e.target.closest('.screen-scroll')) return;
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+    if (isInteractive(e.target)) return;
+    if (e.target.closest('.screen-scroll')) return;
+    const t = e.changedTouches[0];
+    const dy = touchStartY - t.clientY;
+    const dx = touchStartX - t.clientX;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 60) {
+        goToScreen(dy > 0 ? currentScreen + 1 : currentScreen - 1);
+    }
+}, { passive: true });
+
+// ============================================
+// INIT
+// ============================================
+console.log(`%c💝 Сделано с любовью для ${girlName}`, 'font-size:16px; color:#ff4d6d;');
+</script>
+
+</body>
+</html>
